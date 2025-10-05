@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Adicionar Alimentador{% endblock %}
+{% block content %}
+<h1>Adicionar Alimentador</h1>
+<form method="post" class="form-container">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Nome:</label>
+        <input type="text" name="name" id="name" placeholder="Digite o nome do alimentador" required>
+    </div>
+    <div class="form-group">
+        <label for="location">Localização:</label>
+        <input type="text" name="location" id="location" placeholder="Digite a localização" required>
+    </div>
+    <div class="form-group">
+        <label for="owner">Proprietário:</label>
+        <input type="text" name="owner" id="owner" placeholder="Digite o nome do proprietário" required>
+    </div>
+    <div class="form-group">
+        <label for="status">Status:</label>
+        <select name="status" id="status" required>
+            <option value="active">Ativo</option>
+            <option value="inactive">Inativo</option>
+            <option value="maintance">Manutenção</option>
+            <option value="error">Erro</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="food_level">Nível de Ração:</label>
+        <input type="number" name="food_level" id="food_level" placeholder="Digite o nível de ração (%)" required>
+    </div>
+    <div class="form-group">
+        <label for="capacity">Capacidade:</label>
+        <input type="number" name="capacity" id="capacity" placeholder="Digite a capacidade total" required>
+    </div>
+    <div class="form-group">
+        <label for="daily_consumption">Consumo Diário:</label>
+        <input type="number" name="daily_consumption" id="daily_consumption" placeholder="Digite o consumo diário" required>
+    </div>
+    <div class="form-group">
+        <label for="last_maintenance">Última Manutenção:</label>
+        <input type="date" name="last_maintenance" id="last_maintenance" required>
+    </div>
+    <div class="form-group">
+        <label for="next_maintenance">Próxima Manutenção:</label>
+        <input type="date" name="next_maintenance" id="next_maintenance" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+</form>
+{% endblock %}

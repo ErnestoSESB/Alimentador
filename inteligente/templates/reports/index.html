@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Relatórios - AgroFeeder{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Relatórios</h1>
+        <p>Análises e estatísticas do sistema</p>
+    </div>
+    <div class="page-actions">
+        <select id="periodSelect" class="period-select">
+            <option value="last7days">Últimos 7 dias</option>
+            <option value="last30days" selected>Últimos 30 dias</option>
+            <option value="last3months">Últimos 3 meses</option>
+            <option value="last6months">Últimos 6 meses</option>
+        </select>
+        <button class="btn btn-primary">
+            <i class="fas fa-download"></i>
+            Exportar PDF
+        </button>
+    </div>
+</div>
+
+<!-- Key Metrics -->
+<div class="metrics-grid">
+    <div class="metric-card metric-green">
+        <div class="metric-content">
+            <div class="metric-icon">
+                <i class="fas fa-play-circle"></i>
+            </div>
+            <div class="metric-info">
+                <h3>{{ report_data.feeding_efficiency|default:94 }}%</h3>
+                <p>Eficiência de Alimentação</p>
+                <span class="metric-trend positive">+2.3% vs período anterior</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="metric-card metric-blue">
+        <div class="metric-content">
+            <div class="metric-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <div class="metric-info">
+                <h3>{{ report_data.total_consumption|default:1250 }}kg</h3>
+                <p>Consumo Total</p>
+                <span class="metric-trend positive">+5.1% vs período anterior</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="metric-card metric-orange">
+        <div class="metric-content">
+            <div class="metric-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="metric-info">
+                <h3>{{ report_data.average_level|default:65 }}%</h3>
+                <p>Nível Médio de Ração</p>
+                <span class="metric-trend negative">-1.2% vs período anterior</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Consumption Chart -->
+<div class="chart-section">
+    <div class="chart-header">
+        <h2>Consumo Mensal (kg)</h2>
+        <div class="chart-period">
+            <i class="fas fa-calendar"></i>
+            <span>Jan - Jun 2024</span>
+        </div>
+    </div>
+    <div class="chart-container">
+        <div class="chart-bars">
+            <div class="chart-bar" data-value="980" style="height: 75%">
+                <div class="bar-value">980</div>
+                <div class="bar-label">Jan</div>
+            </div>
+            <div class="chart-bar" data-value="1100" style="height: 85%">
+                <div class="bar-value">1100</div>
+                <div class="bar-label">Fev</div>
+            </div>
+            <div class="chart-bar" data-value="1200" style="height: 92%">
+                <div class="bar-value">1200</div>
+                <div class="bar-label">Mar</div>
+            </div>
+            <div class="chart-bar" data-value="1150" style="height: 88%">
+                <div class="bar-value">1150</div>
+                <div class="bar-label">Abr</div>
+            </div>
+            <div class="chart-bar" data-value="1250" style="height: 96%">
+                <div class="bar-value">1250</div>
+                <div class="bar-label">Mai</div>
+            </div>
+            <div class="chart-bar" data-value="1180" style="height: 90%">
+                <div class="bar-value">1180</div>
+                <div class="bar-label">Jun</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="reports-grid">
+    <!-- System Performance -->
+    <div class="report-section">
+        <h2>Performance do Sistema</h2>
+        <div class="performance-metrics">
+            <div class="performance-item">
+                <span class="performance-label">Tempo de Atividade</span>
+                <span class="performance-value success">{{ report_data.system_uptime|default:99.2 }}%</span>
+            </div>
+            <div class="performance-item">
+                <span class="performance-label">Manutenções Realizadas</span>
+                <span class="performance-value info">{{ report_data.maintenance_completed|default:8 }}</span>
+            </div>
+            <div class="performance-item">
+                <span class="performance-label">Alertas Gerados</span>
+                <span class="performance-value warning">{{ report_data.alerts_generated|default:12 }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Feeders -->
+    <div class="report-section">
+        <h2>Alimentadores Mais Ativos</h2>
+        <div class="top-feeders">
+            {% if top_feeders %}
+    {% for feeder in top_feeders %}
+    <div class="feeder-performance">
+        <div class="feeder-info">
+            <h4>{{ feeder.name }}</h4>
+            <span class="consumption">{{ feeder.consumption }}kg</span>
+        </div>
+        <div class="efficiency-bar">
+            <div class="efficiency-progress" style="width: {{ feeder.efficiency }}%"></div>
+            <span class="efficiency-value">{{ feeder.efficiency }}%</span>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>Nenhum alimentador disponível.</p>
+{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Summary Report -->
+<div class="summary-section">
+    <h2>Resumo Executivo</h2>
+    <div class="summary-content">
+        <p>
+            Durante o período analisado, o sistema de alimentação automática apresentou excelente performance 
+            com {{ report_data.feeding_efficiency|default:94 }}% de eficiência. O consumo total de ração foi de {{ report_data.total_consumption|default:1250 }}kg, 
+            representando um aumento de 5.1% em relação ao período anterior.
+        </p>
+        <p>
+            O sistema manteve {{ report_data.system_uptime|default:99.2 }}% de tempo de atividade, com {{ report_data.maintenance_completed|default:8 }} manutenções 
+            preventivas realizadas e {{ report_data.alerts_generated|default:12 }} alertas gerados para otimizar a operação.
+        </p>
+        <p>
+            Recomenda-se manter o cronograma atual de manutenções e monitorar os níveis de ração dos 
+            alimentadores com maior consumo para otimizar ainda mais a eficiência do sistema.
+        </p>
+    </div>
+</div>
+{% endblock %}

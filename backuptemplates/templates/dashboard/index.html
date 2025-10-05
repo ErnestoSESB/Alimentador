@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - AgroFeeder{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Dashboard</h1>
+        <p>Visão geral do sistema de alimentação</p>
+    </div>
+    <div class="page-actions">
+        <button class="btn btn-primary">
+            <i class="fas fa-sync-alt"></i>
+            Atualizar Dados
+        </button>
+    </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card stat-blue">
+        <div class="stat-content">
+            <div class="stat-info">
+                <p class="stat-label">Total de Alimentadores</p>
+                <p class="stat-value">{{ stats.total_feeders|default:4 }}</p>
+                <div class="stat-trend positive">
+                    <span>+12% vs mês anterior</span>
+                </div>
+            </div>
+            <div class="stat-icon">
+                <i class="fas fa-cogs"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card stat-green">
+        <div class="stat-content">
+            <div class="stat-info">
+                <p class="stat-label">Alimentadores Ativos</p>
+                <p class="stat-value">{{ stats.active_feeders|default:2 }}</p>
+                <p class="stat-subtitle">{{ stats.inactive_feeders|default:2 }} inativos</p>
+            </div>
+            <div class="stat-icon">
+                <i class="fas fa-play-circle"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card stat-orange">
+        <div class="stat-content">
+            <div class="stat-info">
+                <p class="stat-label">Alertas Pendentes</p>
+                <p class="stat-value">{{ stats.alerts_count|default:3 }}</p>
+                <p class="stat-subtitle">Necessitam atenção</p>
+            </div>
+            <div class="stat-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-card stat-green">
+        <div class="stat-content">
+            <div class="stat-info">
+                <p class="stat-label">Nível Médio de Ração</p>
+                <p class="stat-value">{{ stats.average_food_level|default:40 }}%</p>
+            </div>
+            <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <!-- Recent Alerts -->
+    <div class="dashboard-section alerts-section">
+        <div class="section-header">
+            <h2>Alertas Recentes</h2>
+            <a href="{% url 'alerts' %}" class="section-link">Ver todos</a>
+        </div>
+        <div class="alerts-list">
+            {% for alert in recent_alerts %}
+            <div class="alert-item severity-{{ alert.severity }}">
+                <div class="alert-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="alert-content">
+                    <h4>{{ alert.feeder_name }}</h4>
+                    <p>{{ alert.message }}</p>
+                    <span class="alert-time">{{ alert.created_at|date:"d/m/Y H:i" }}</span>
+                </div>
+                <div class="alert-severity">
+                    {% if alert.severity == 'high' %}Alto{% elif alert.severity == 'medium' %}Médio{% else %}Baixo{% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-check-circle"></i>
+                <p>Nenhum alerta pendente</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Active Feeders Status -->
+    <div class="dashboard-section feeders-section">
+        <h2>Status dos Alimentadores</h2>
+        <div class="feeders-status">
+            {% for feeder in active_feeders %}
+            <div class="feeder-status-item">
+                <div class="feeder-info">
+                    <h4>{{ feeder.name }}</h4>
+                    <p>{{ feeder.location }}</p>
+                </div>
+                <div class="feeder-level">
+                    <div class="level-badge level-{% if feeder.food_level > 50 %}high{% elif feeder.food_level > 20 %}medium{% else %}low{% endif %}">
+                        {{ feeder.food_level }}%
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-cogs"></i>
+                <p>Nenhum alimentador ativo</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

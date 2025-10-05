@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib import admin
+from django.utils import timezone
 
 # Create your models here.
 
@@ -83,3 +85,133 @@ class Relatorio(models.Model):
 
     def __str__(self):
         return f"Report {self.id} - {self.feeder.model}"
+
+# Django Models for AgroFeeder System
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+class UserProfile(models.Model):
+    """Extended user profile"""
+    ROLE_CHOICES = [
+        ('admin', 'Administrador'),
+        ('farmer', 'Agricultor'),
+        ('operator', 'Operador'),
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='operator')
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user.get_full_name()} - {self.get_role_display()}"
+
+class Feeder(models.Model):
+    """Animal feeder model"""
+    STATUS_CHOICES = [
+        ('active', 'Ativo'),
+        ('inactive', 'Inativo'),
+        ('maintenance', 'Manutenção'),
+        ('error', 'Erro'),
+    ]
+    
+    name = models.CharField(max_length=100, verbose_name='Nome')
+    location = models.CharField(max_length=200, verbose_name='Localização')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='inactive', verbose_name='Status')
+    food_level = models.IntegerField(default=0, verbose_name='Nível de Ração (%)')
+    last_maintenance = models.DateField(default=timezone.now, verbose_name='Última Manutenção')
+    owner = models.CharField(max_length=100, verbose_name='Proprietário')
+    capacity = models.IntegerField(default=500, verbose_name='Capacidade (kg)')
+    daily_consumption = models.IntegerField(default=25, verbose_name='Consumo Diário (kg)')
+    next_feeding_time = models.DateTimeField(default=timezone.now, verbose_name='Próxima Alimentação')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    next_maintenance = models.DateField(null=True, blank=True, verbose_name='Próxima Manutenção')
+    
+    class Meta:
+        verbose_name = 'Alimentador'
+        verbose_name_plural = 'Alimentadores'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return self.name
+    
+    @property
+    def is_low_food(self):
+        """Check if food level is low"""
+        return self.food_level < 20
+    
+    @property
+    def needs_maintenance(self):
+        """Check if maintenance is needed"""
+        from datetime import date, timedelta
+        return (date.today() - self.last_maintenance).days > 30
+
+class Alert(models.Model):
+    TYPE_CHOICES = [
+        ('low_food', 'Nível Baixo de Ração'),
+        ('maintenance', 'Manutenção Necessária'),
+        ('error', 'Erro no Sistema'),
+        ('offline', 'Equipamento Offline'),
+    ]
+    
+    SEVERITY_CHOICES = [
+        ('low', 'Baixo'),
+        ('medium', 'Médio'),
+        ('high', 'Alto'),
+    ]
+    
+    feeder = models.ForeignKey('Feeder', on_delete=models.CASCADE, related_name='alerts')
+    feeder_name = models.CharField(max_length=100, verbose_name='Nome do Alimentador')  # Campo obrigatório
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    message = models.TextField(verbose_name='Mensagem')
+    severity = models.CharField(max_length=10, choices=SEVERITY_CHOICES, default='medium')
+    resolved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(verbose_name='Criado em')
+    resolved_at = models.DateTimeField(null=True, blank=True, verbose_name='Resolvido em')
+
+    def save(self, *args, **kwargs):
+        # Preenche automaticamente o nome do alimentador
+        if self.feeder and not self.feeder_name:
+            self.feeder_name = self.feeder.name
+        super().save(*args, **kwargs)
+
+    def feeder_name(self):
+        return self.feeder.name
+    feeder_name.short_description = 'Nome do Alimentador'
+
+    def __str__(self):
+        return f"{self.feeder.name} - {self.get_type_display()}"
+
+class MaintenanceLog(models.Model):
+    """Maintenance log model"""
+    feeder = models.ForeignKey(Feeder, on_delete=models.CASCADE, related_name='maintenance_logs')
+    performed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.TextField(verbose_name='Descrição')
+    date_performed = models.DateTimeField(default=timezone.now, verbose_name='Data da Manutenção')
+    cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name='Custo')
+    
+    class Meta:
+        verbose_name = 'Log de Manutenção'
+        verbose_name_plural = 'Logs de Manutenção'
+        ordering = ['-date_performed']
+    
+    def __str__(self):
+        return f"{self.feeder.name} - {self.date_performed.strftime('%d/%m/%Y')}"
+
+class FeedingLog(models.Model):
+    """Feeding log model"""
+    feeder = models.ForeignKey(Feeder, on_delete=models.CASCADE, related_name='feeding_logs')
+    amount_dispensed = models.IntegerField(verbose_name='Quantidade Dispensada (kg)')
+    timestamp = models.DateTimeField(default=timezone.now, verbose_name='Data/Hora')
+    success = models.BooleanField(default=True, verbose_name='Sucesso')
+    error_message = models.TextField(blank=True, null=True, verbose_name='Mensagem de Erro')
+    
+    class Meta:
+        verbose_name = 'Log de Alimentação'
+        verbose_name_plural = 'Logs de Alimentação'
+        ordering = ['-timestamp']
+    
+    def __str__(self):
+        return f"{self.feeder.name} - {self.timestamp.strftime('%d/%m/%Y %H:%M')}"

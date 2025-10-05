@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AgroFeeder - Sistema de Alimentação Automática{% endblock %}</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'css/style.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <h2 class="logo-title">AgroFeeder</h2>
+                    <p class="logo-subtitle">Painel de Controle</p>
+                </div>
+                <button class="sidebar-close" id="sidebarClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'feeders' %}" class="nav-item {% if request.resolver_match.url_name == 'feeders' %}active{% endif %}">
+                    <i class="fas fa-cogs"></i>
+                    <span>Alimentadores</span>
+                </a>
+                <a href="{% url 'users' %}" class="nav-item {% if request.resolver_match.url_name == 'users' %}active{% endif %}">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários</span>
+                </a>
+                <a href="{% url 'alerts' %}" class="nav-item {% if request.resolver_match.url_name == 'alerts' %}active{% endif %}">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Alertas</span>
+                </a>
+                <a href="{% url 'reports' %}" class="nav-item {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Relatórios</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p class="version">Versão 1.0.0</p>
+                <p class="project">TCC - Sistema de Alimentação</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-title">
+                        <h1>AgroFeeder</h1>
+                        <p class="header-subtitle">Sistema de Alimentação Automática</p>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">{{ alerts_count|default:0 }}</span>
+                    </button>
+                    
+                    {% if user.is_authenticated %}
+                    <div class="user-menu">
+                        <div class="user-info">
+                            <p class="user-name">{{ user.get_full_name|default:user.username }}</p>
+                            <p class="user-role">{{ user.profile.role|default:'Usuário' }}</p>
+                        </div>
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <a href="{% url 'logout' %}" class="logout-btn" title="Sair">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="page-content">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script src="{% load static %}{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

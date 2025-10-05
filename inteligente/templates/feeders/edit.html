@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Editar Alimentador{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Editar Alimentador</h1>
+        <p>Atualize as informações do alimentador</p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'feeder_detail' feeder.id %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </a>
+    </div>
+</div>
+
+<div class="feeder-card">
+    <form method="post" class="form-container">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            Salvar
+        </button>
+    </form>
+</div>
+{% endblock %}

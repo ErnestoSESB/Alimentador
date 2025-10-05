@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Alimentadores - AgroFeeder{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Alimentadores</h1>
+        <p>Gerencie seus equipamentos de alimentação</p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'feeder_add' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Adicionar Alimentador
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="filters-section">
+    <form method="get" class="filters-form">
+        <div class="filter-group">
+            <div class="search-input">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" value="{{ request.GET.search }}" 
+                       placeholder="Buscar por nome, localização ou proprietário...">
+            </div>
+        </div>
+        <div class="filter-group">
+            <select name="status">
+                <option value="">Todos os Status</option>
+                <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Ativo</option>
+                <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inativo</option>
+                <option value="maintenance" {% if request.GET.status == 'maintenance' %}selected{% endif %}>Manutenção</option>
+                <option value="error" {% if request.GET.status == 'error' %}selected{% endif %}>Erro</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">Filtrar</button>
+    </form>
+</div>
+
+<!-- Feeders Grid -->
+<div class="feeders-grid">
+    {% for feeder in feeders %}
+    <div class="feeder-card">
+        <div class="feeder-header">
+            <div class="feeder-title">
+                <h3>{{ feeder.name }}</h3>
+                <div class="feeder-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ feeder.location }}</span>
+                </div>
+            </div>
+            <div class="feeder-status status-{{ feeder.status }}">
+                <i class="fas fa-{% if feeder.status == 'active' %}play-circle{% elif feeder.status == 'maintenance' %}wrench{% elif feeder.status == 'error' %}exclamation-circle{% else %}pause-circle{% endif %}"></i>
+                {% if feeder.status == 'active' %}Ativo{% elif feeder.status == 'maintenance' %}Manutenção{% elif feeder.status == 'error' %}Erro{% else %}Inativo{% endif %}
+            </div>
+        </div>
+
+        <div class="feeder-content">
+            <div class="food-level">
+                <div class="level-info">
+                    <span>Nível de Ração</span>
+                    <div class="level-value level-{% if feeder.food_level > 50 %}high{% elif feeder.food_level > 20 %}medium{% else %}low{% endif %}">
+                        {{ feeder.food_level }}%
+                    </div>
+                </div>
+                <div class="level-bar">
+                    <div class="level-progress" style="width: {{ feeder.food_level }}%"></div>
+                </div>
+            </div>
+
+            <div class="feeder-details">
+                <div class="detail-item">
+                    <span class="detail-label">Proprietário</span>
+                    <span class="detail-value">{{ feeder.owner }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Última Manutenção</span>
+                    <span class="detail-value">{{ feeder.last_maintenance|date:"d/m/Y" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="feeder-actions">
+            <a href="{% url 'feeder_detail' feeder.id %}" class="btn btn-outline">
+                <i class="fas fa-eye"></i>
+                Ver Detalhes
+            </a>
+            <a href="{% url 'feeder_edit' feeder.id %}" class="btn btn-secondary">
+                <i class="fas fa-edit"></i>
+                Editar
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state-full">
+        <div class="empty-icon">
+            <i class="fas fa-cogs"></i>
+        </div>
+        <h3>Nenhum alimentador encontrado</h3>
+        <p>
+            {% if request.GET.search or request.GET.status %}
+                Tente ajustar os filtros de busca
+            {% else %}
+                Adicione seu primeiro alimentador para começar
+            {% endif %}
+        </p>
+        {% if not request.GET.search and not request.GET.status %}
+        <a href="{% url 'feeder_add' %}" class="btn btn-primary">
+            Adicionar Alimentador
+        </a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<div class="pagination-wrapper">
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" class="page-link">
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" class="page-link">
+                <i class="fas fa-angle-left"></i>
+            </a>
+        {% endif %}
+
+        <span class="page-info">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" class="page-link">
+                <i class="fas fa-angle-right"></i>
+            </a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}" class="page-link">
+                <i class="fas fa-angle-double-right"></i>
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

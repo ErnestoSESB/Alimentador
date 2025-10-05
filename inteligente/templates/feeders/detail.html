@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Detalhes do Alimentador{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Detalhes do Alimentador</h1>
+        <p>Veja todas as informações do alimentador</p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'feeder_edit' feeder.id %}" class="btn btn-secondary">
+            <i class="fas fa-edit"></i>
+            Editar
+        </a>
+        <a href="{% url 'feeders' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </a>
+    </div>
+</div>
+
+<div class="feeder-card">
+    <div class="feeder-content">
+        <table class="table">
+            <tr>
+                <th>Nome:</th>
+                <td>{{ feeder.name }}</td>
+            </tr>
+            <tr>
+                <th>Localização:</th>
+                <td>{{ feeder.location }}</td>
+            </tr>
+            <tr>
+                <th>Proprietário:</th>
+                <td>{{ feeder.owner }}</td>
+            </tr>
+            <tr>
+                <th>Status:</th>
+                <td>
+                    <span class="feeder-status status-{{ feeder.status }}">
+                        {% if feeder.status == 'active' %}Ativo{% elif feeder.status == 'maintenance' %}Manutenção{% elif feeder.status == 'error' %}Erro{% else %}Inativo{% endif %}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>Nível de Ração:</th>
+                <td>{{ feeder.food_level }}%</td>
+            </tr>
+            <tr>
+                <th>Capacidade:</th>
+                <td>{{ feeder.capacity }}</td>
+            </tr>
+            <tr>
+                <th>Consumo Diário:</th>
+                <td>{{ feeder.daily_consumption }}</td>
+            </tr>
+            <tr>
+                <th>Última Manutenção:</th>
+                <td>{{ feeder.last_maintenance|date:"d/m/Y" }}</td>
+            </tr>
+            <tr>
+                <th>Próxima Manutenção:</th>
+                <td>{{ feeder.next_maintenance|date:"d/m/Y" }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}
