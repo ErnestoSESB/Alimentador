@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Editar Alerta{% endblock %}
+{% block content %}
+<h1>Editar Alerta</h1>
+<form method="post">
+    {% csrf_token %}
+    <label for="type">Tipo:</label>
+    <select name="type" id="type">
+        <option value="low_food" {% if alert.type == 'low_food' %}selected{% endif %}>Nível Baixo de Ração</option>
+        <option value="maintenance" {% if alert.type == 'maintenance' %}selected{% endif %}>Manutenção Necessária</option>
+        <option value="error" {% if alert.type == 'error' %}selected{% endif %}>Erro no Sistema</option>
+        <option value="offline" {% if alert.type == 'offline' %}selected{% endif %}>Equipamento Offline</option>
+    </select>
+    <br>
+    <label for="message">Mensagem:</label>
+    <textarea name="message" id="message">{{ alert.message }}</textarea>
+    <br>
+    <label for="severity">Severidade:</label>
+    <select name="severity" id="severity">
+        <option value="low" {% if alert.severity == 'low' %}selected{% endif %}>Baixo</option>
+        <option value="medium" {% if alert.severity == 'medium' %}selected{% endif %}>Médio</option>
+        <option value="high" {% if alert.severity == 'high' %}selected{% endif %}>Alto</option>
+    </select>
+    <br>
+    <label for="resolved">Resolvido:</label>
+    <input type="checkbox" name="resolved" id="resolved" {% if alert.resolved %}checked{% endif %}>
+    <br>
+    <button type="submit">Salvar</button>
+</form>
+{% endblock %}

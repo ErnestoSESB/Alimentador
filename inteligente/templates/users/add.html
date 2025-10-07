@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Adicionar Usuário{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Adicionar Usuário</h1>
+        <p>Preencha as informações abaixo para adicionar um novo usuário ao sistema.</p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'users' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </a>
+    </div>
+</div>
+
+<div class="form-container">
+    <div class="auth-card">
+        <!-- Tudo isso pra mensagem de erro pqp -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- O animal do usuario não sabe preencher um formulario -->
+        {% if user_form.errors or profile_form.errors %}
+            <div class="alert alert-error">
+                <h4>Erro nos dados do formulário:</h4>
+                {{ user_form.errors }}
+                {{ profile_form.errors }}
+            </div>
+        {% endif %}
+        
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            <h2 class="form-title">Informações do Usuário</h2>
+            <div class="form-group">
+                {{ user_form.as_p }}
+            </div>
+            <h2 class="form-title">Informações do Perfil</h2>
+            <div class="form-group">
+                {{ profile_form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Salvar
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

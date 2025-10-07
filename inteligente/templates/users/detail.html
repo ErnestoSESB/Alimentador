@@ -1,0 +1,572 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ user_obj.get_full_name|default:user_obj.username }} - Detalhes do Usuário{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Detalhes do Usuário</h1>
+        <p>Informações completas de {{ user_obj.get_full_name|default:user_obj.username }}</p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'users' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </a>
+        <a href="{% url 'user_edit' user_obj.id %}" class="btn btn-primary">
+            <i class="fas fa-edit"></i>
+            Editar Usuário
+        </a>
+    </div>
+</div>
+
+<!-- User Profile Section -->
+<div class="dashboard-grid">
+    <!-- Main User Info -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>
+                <i class="fas fa-user"></i>
+                Informações Pessoais
+            </h2>
+            <div class="user-role role-{{ user_obj.profile.role|default:'operator' }}">
+                {% if user_obj.profile.role == 'admin' %}
+                    <i class="fas fa-shield-alt"></i>
+                    Administrador
+                {% elif user_obj.profile.role == 'farmer' %}
+                    <i class="fas fa-seedling"></i>
+                    Agricultor
+                {% else %}
+                    <i class="fas fa-cog"></i>
+                    Operador
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="user-details-grid">
+            <div class="user-main-info">
+                <div class="user-avatar-large">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-identity">
+                    <h3>{{ user_obj.get_full_name|default:user_obj.username }}</h3>
+                    <p class="user-username">@{{ user_obj.username }}</p>
+                    <div class="user-status">
+                        {% if user_obj.is_active %}
+                            <span class="status-badge status-active">
+                                <i class="fas fa-check-circle"></i>
+                                Ativo
+                            </span>
+                        {% else %}
+                            <span class="status-badge status-inactive">
+                                <i class="fas fa-times-circle"></i>
+                                Inativo
+                            </span>
+                        {% endif %}
+                        
+                        {% if user_obj.is_staff %}
+                            <span class="status-badge status-staff">
+                                <i class="fas fa-crown"></i>
+                                Staff
+                            </span>
+                        {% endif %}
+                        
+                        {% if user_obj.is_superuser %}
+                            <span class="status-badge status-superuser">
+                                <i class="fas fa-star"></i>
+                                Superusuário
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-info-grid">
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-user-tag"></i>
+                        Nome Completo
+                    </div>
+                    <div class="info-value">
+                        {{ user_obj.first_name }} {{ user_obj.last_name|default:'Não informado' }}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-envelope"></i>
+                        E-mail
+                    </div>
+                    <div class="info-value">
+                        {{ user_obj.email|default:'Não informado' }}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-phone"></i>
+                        Telefone
+                    </div>
+                    <div class="info-value">
+                        {{ user_obj.profile.phone|default:'Não informado' }}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Endereço
+                    </div>
+                    <div class="info-value">
+                        {{ user_obj.profile.address|default:'Não informado' }}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-briefcase"></i>
+                        Função no Sistema
+                    </div>
+                    <div class="info-value">
+                        {% if user_obj.profile.role == 'admin' %}
+                            Administrador do Sistema
+                        {% elif user_obj.profile.role == 'farmer' %}
+                            Agricultor/Proprietário
+                        {% else %}
+                            Operador de Campo
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-calendar-plus"></i>
+                        Data de Cadastro
+                    </div>
+                    <div class="info-value">
+                        {{ user_obj.date_joined|date:"d/m/Y H:i" }}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-clock"></i>
+                        Último Login
+                    </div>
+                    <div class="info-value">
+                        {% if user_obj.last_login %}
+                            {{ user_obj.last_login|date:"d/m/Y H:i" }}
+                        {% else %}
+                            Nunca fez login
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="fas fa-users"></i>
+                        Grupos
+                    </div>
+                    <div class="info-value">
+                        {% for group in user_obj.groups.all %}
+                            <span class="group-badge">{{ group.name }}</span>
+                        {% empty %}
+                            Nenhum grupo atribuído
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Activity & Feeders -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2>
+                <i class="fas fa-chart-line"></i>
+                Atividade & Equipamentos
+            </h2>
+        </div>
+        
+        <div class="activity-section">
+            <!-- User Stats -->
+            <div class="user-stats">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ feeders.count }}</div>
+                        <div class="stat-label">Alimentadores</div>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">
+                            {% if user_obj.last_login %}
+                                {{ user_obj.last_login|timesince }}
+                            {% else %}
+                                Nunca
+                            {% endif %}
+                        </div>
+                        <div class="stat-label">Último Acesso</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User's Feeders -->
+            {% if feeders %}
+            <div class="user-feeders">
+                <h3>Alimentadores Associados</h3>
+                <div class="feeders-list">
+                    {% for feeder in feeders %}
+                    <div class="feeder-item-small">
+                        <div class="feeder-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div class="feeder-info">
+                            <h4>{{ feeder.name }}</h4>
+                            <p>{{ feeder.location }}</p>
+                            <span class="feeder-status status-{{ feeder.status }}">
+                                {{ feeder.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-cogs"></i>
+                <h4>Nenhum alimentador associado</h4>
+                <p>Este usuário não possui alimentadores vinculados.</p>
+            </div>
+            {% endif %}
+            
+            <!-- Permissions Section -->
+            <div class="user-permissions">
+                <h3>
+                    <i class="fas fa-key"></i>
+                    Permissões do Sistema
+                </h3>
+                <div class="permissions-grid">
+                    <div class="permission-item">
+                        <div class="permission-icon">
+                            {% if user_obj.is_active %}
+                                <i class="fas fa-check-circle text-success"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle text-danger"></i>
+                            {% endif %}
+                        </div>
+                        <div class="permission-text">
+                            <strong>Conta Ativa</strong>
+                            <p>{% if user_obj.is_active %}Pode fazer login no sistema{% else %}Não pode acessar o sistema{% endif %}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <div class="permission-icon">
+                            {% if user_obj.is_staff %}
+                                <i class="fas fa-check-circle text-success"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle text-muted"></i>
+                            {% endif %}
+                        </div>
+                        <div class="permission-text">
+                            <strong>Acesso Administrativo</strong>
+                            <p>{% if user_obj.is_staff %}Pode acessar o painel administrativo{% else %}Acesso restrito ao sistema principal{% endif %}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <div class="permission-icon">
+                            {% if user_obj.is_superuser %}
+                                <i class="fas fa-check-circle text-success"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle text-muted"></i>
+                            {% endif %}
+                        </div>
+                        <div class="permission-text">
+                            <strong>Superusuário</strong>
+                            <p>{% if user_obj.is_superuser %}Controle total sobre o sistema{% else %}Permissões limitadas conforme função{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.user-details-grid {
+    padding: 1.5rem;
+}
+
+.user-main-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.user-avatar-large {
+    width: 5rem;
+    height: 5rem;
+    background: #22c55e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.user-identity h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.user-username {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+}
+
+.user-status {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-inactive {
+    background: #fecaca;
+    color: #991b1b;
+}
+
+.status-staff {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-superuser {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.user-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.info-value {
+    font-size: 1rem;
+    color: #111827;
+    font-weight: 500;
+}
+
+.group-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: #f3f4f6;
+    color: #374151;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    margin-right: 0.5rem;
+}
+
+.activity-section {
+    padding: 1.5rem;
+}
+
+.user-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    flex: 1;
+}
+
+.stat-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #22c55e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #111827;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.user-feeders h3,
+.user-permissions h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.feeders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.feeder-item-small {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+}
+
+.feeder-icon {
+    width: 2rem;
+    height: 2rem;
+    background: #22c55e;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.875rem;
+}
+
+.feeder-item-small h4 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.feeder-item-small p {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.permissions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.permission-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+}
+
+.permission-icon {
+    font-size: 1.25rem;
+    margin-top: 0.125rem;
+}
+
+.permission-text strong {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.permission-text p {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.text-success {
+    color: #22c55e;
+}
+
+.text-danger {
+    color: #ef4444;
+}
+
+.text-muted {
+    color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+    .user-main-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .user-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-stats {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}

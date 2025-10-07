@@ -13,14 +13,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.contrib.auth.models import Group
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
+from django.utils import timezone
 from .models import Feeder, Alert, UserProfile
 from django.shortcuts import render
 from django.db.models import Avg
 from inteligente.models import Feeder, Alert
-from inteligente.forms import feederForm, Feeder
+from inteligente.forms import feederForm, Feeder, User, UserForm, UserProfile, UserProfileForm
 
 
 def login_view(request):
@@ -29,16 +31,20 @@ def login_view(request):
         email = request.POST.get('username')
         password = request.POST.get('password')
 
-        userobject = User.objects.get(email=email)
-        user = authenticate(request, username=userobject.username, password=password)
-        if user is not None:
+        users = User.objects.filter(email=email)
+        if not users.exists():
+            messages.error(request, "Usuário não encontrado.")
+            return redirect('login')
+
+        user = users.first()
+        if user.check_password(password): 
             login(request, user)
             return redirect('dashboard')
         else:
-            messages.error(request, 'Email ou senha inválidos.')
-    
-    return render(request, 'auth/login.html')
+            messages.error(request, "Senha incorreta.")
+            return redirect('login')
 
+    return render(request, 'auth/login.html')
 def logout_view(request):
     """Logout view"""
     logout(request)
@@ -53,6 +59,23 @@ def dashboard(request):
     pending_alerts = Alert.objects.filter(resolved=False)
     
     stats = {
+
+
+@login_required
+def alert_edit(request, alert_id):
+    alert = get_object_or_404(Alert, id=alert_id)
+    if request.method == 'POST':
+        alert.type = request.POST.get('type')
+        alert.message = request.POST.get('message')
+        alert.severity = request.POST.get('severity')
+        alert.resolved = bool(request.POST.get('resolved'))
+        alert.save()
+        messages.success(request, 'Alerta atualizado com sucesso!')
+        return redirect('alerts')
+    context = {
+        'alert': alert,
+    }
+    return render(request, 'alerts/edit.html', context)
         'total_feeders': total_feeders,
         'active_feeders': active_feeders.count(),
         'inactive_feeders': total_feeders - active_feeders.count(),
@@ -177,6 +200,8 @@ def users_list(request):
     if role:
         users = users.filter(profile__role=role)
     
+    # Order users to avoid pagination warning
+    users = users.order_by('id')
 
     paginator = Paginator(users, 10) 
     page_number = request.GET.get('page')
@@ -192,79 +217,169 @@ def users_list(request):
 
 @login_required
 def user_detail(request, user_id):
-    """User detail view"""
+
     user = get_object_or_404(User, id=user_id)
     
-    # Get user's feeders if they are a farmer
+
     feeders = []
     if hasattr(user, 'profile') and user.profile.role == 'farmer':
         feeders = Feeder.objects.filter(owner=user.get_full_name())
+
+    user_alerts_count = 0
+    if feeders:
+        user_alerts_count = Alert.objects.filter(
+            feeder_name__in=[f.name for f in feeders]
+        ).count()
     
     context = {
-        'user_obj': user,  # Avoid conflict with request.user
+        'user_obj': user, 
         'feeders': feeders,
+        'user_alerts_count': user_alerts_count,
+        'feeders_count': feeders.count() if feeders else 0,
     }
     
     return render(request, 'users/detail.html', context)
 
 @login_required
 def user_add(request):
-    """Add new user"""
-    if request.method == 'POST':
-        # Handle form submission
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        role = request.POST.get('role')
-        phone = request.POST.get('phone')
-        
-        # Create user
-        user = User.objects.create_user(
-            username=email,
-            email=email,
-            first_name=first_name,
-            last_name=last_name,
-            password='temp123'  # Temporary password
-        )
-        
-        # Create profile
-        UserProfile.objects.create(
-            user=user,
-            role=role,
-            phone=phone
-        )
-        
-        messages.success(request, f'Usuário "{user.get_full_name()}" adicionado com sucesso!')
-        return redirect('user_detail', user_id=user.id)
+    #ADM?
+    user_is_admin = False
     
-    return render(request, 'users/add.html')
+    # VOCE TEM A SENHA???
+    if request.user.is_superuser:
+        user_is_admin = True
+    # PRA CORRER EM ALL CANTO?
+    elif hasattr(request.user, 'profile') and request.user.profile.role == 'admin':
+        user_is_admin = True
+    
+    if not user_is_admin:
+        messages.error(request, "Apenas administradores podem criar usuários.")
+        return redirect('users')
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            try:
+                # Cria o usuário
+                user = user_form.save(commit=False)
+                user.set_password(user_form.cleaned_data['password'])
+                user.save()
+
+        
+                role = profile_form.cleaned_data['role']
+                group, created = Group.objects.get_or_create(name=role) #obrigatoriedade para existir a porcaria do grupo
+                user.groups.add(group)
+                profile = profile_form.save(commit=False)
+                profile.user = user
+                profile.save()
+
+                messages.success(request, f'Usuário "{user.get_full_name()}" adicionado com sucesso!')
+                return redirect('users')
+            except Exception as e:
+                messages.error(request, f"Erro ao salvar usuário: {str(e)}")
+        else:
+            messages.error(request, "Erro ao adicionar o usuário. Verifique os dados e tente novamente.")
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render(request, 'users/add.html', {'user_form': user_form, 'profile_form': profile_form})
 
 @login_required
+def user_delete(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, 'Usuário excluído com sucesso!')
+        return redirect('users')
+    return render(request, 'users/confirm_delete.html', {'user_obj': user})
+    
+@login_required
+@login_required
 def user_edit(request, user_id):
-    """Edit user"""
+    """Edit user with robust profile handling"""
     user = get_object_or_404(User, id=user_id)
     
     if request.method == 'POST':
-        # Handle form submission
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-        user.email = request.POST.get('email')
-        user.save()
-        
-        # Update profile
-        if hasattr(user, 'profile'):
-            user.profile.role = request.POST.get('role')
-            user.profile.phone = request.POST.get('phone')
-            user.profile.save()
-        
-        messages.success(request, f'Usuário "{user.get_full_name()}" atualizado com sucesso!')
-        return redirect('user_detail', user_id=user.id)
+        try:
+            from django.db import transaction
+            
+            with transaction.atomic():
+                # Update user basic info
+                user.first_name = request.POST.get('first_name', '')
+                user.last_name = request.POST.get('last_name', '')
+                user.email = request.POST.get('email', '')
+                user.save()
+                
+                # Handle profile with robust error handling
+                role = request.POST.get('role', 'operator')
+                phone = request.POST.get('phone', '')
+                address = request.POST.get('address', '')
+                
+                # First, clean any duplicate profiles for this user
+                profiles = UserProfile.objects.filter(user=user)
+                if profiles.count() > 1:
+                    # Keep the first one, delete the rest
+                    primary_profile = profiles.first()
+                    profiles.exclude(id=primary_profile.id).delete()
+                    
+                # Now handle the profile safely
+                profile, created = UserProfile.objects.get_or_create(
+                    user=user,
+                    defaults={
+                        'role': role,
+                        'phone': phone,
+                        'address': address
+                    }
+                )
+                
+                # If profile already existed, update it
+                if not created:
+                    profile.role = role
+                    profile.phone = phone
+                    profile.address = address
+                    profile.save()
+            
+            messages.success(request, f'Usuário "{user.get_full_name()}" atualizado com sucesso!')
+            return redirect('users')
+            
+        except Exception as e:
+            messages.error(request, f'Erro ao salvar usuário: {str(e)}')
+            # Still render the form with the error
     
     context = {
         'user_obj': user,
     }
     
     return render(request, 'users/edit.html', context)
+
+@login_required
+def alert_edit(request, alert_id):
+
+    alert = get_object_or_404(Alert, id=alert_id)
+    if request.method == 'POST':
+        
+        Alert.feeder = request.POST.get('feeder')
+        Alert.feeder_name = request.POST.get('feeder_name')
+
+@login_required
+def alert_delete(request, alert_id):
+    alert = get_object_or_404(Alert, id=alert_id)
+    if request.method == 'POST':
+        alert.delete()
+        messages.sucess(request, 'Alerta excluido com sucesso')
+        return redirect('alerts')
+
+@login_required
+def user_delete(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, 'Usuário excluído com sucesso!')
+        return redirect('users')
+    return render(request, 'users/delete_confirm.html', {'user_obj': user})
 
 @login_required
 def alerts_list(request):
@@ -314,6 +429,38 @@ def alert_dismiss(request, alert_id):
     
     messages.success(request, 'Alerta foi descartado.')
     return redirect('alerts')
+
+@login_required
+def alert_add(request):
+    """Adicionar um novo alerta"""
+    if request.method == 'POST':
+        feeder_id = request.POST.get('feeder')
+        alert_type = request.POST.get('type')
+        message = request.POST.get('message')
+        severity = request.POST.get('severity')
+        
+        feeder = get_object_or_404(Feeder, id=feeder_id)
+        
+        alert = Alert.objects.create(
+            feeder=feeder,
+            feeder_name=feeder.name,
+            type=alert_type,
+            message=message,
+            severity=severity,
+            created_at=timezone.now()
+        )
+        
+        messages.success(request, f'Alerta adicionado com sucesso para {feeder.name}!')
+        return redirect('alerts')
+    
+    # Buscar todos os feeders para o select
+    feeders = Feeder.objects.all()
+    
+    context = {
+        'feeders': feeders,
+    }
+    
+    return render(request, 'alerts/add.html', context)
 
 @login_required
 def reports_index(request):

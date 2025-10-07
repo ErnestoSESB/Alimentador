@@ -29,32 +29,34 @@ from django.urls import path
 from inteligente import views
 
 urlpatterns = [
-    # Authentication
+    # logn/autenticação
     path('admin/', admin.site.urls),
     path('', views.login_view, name='login'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     
     
-    # Dashboard
+    # Menu principal
     path('dashboard/', views.dashboard, name='dashboard'),
     
-    # Feeders
+    # comedouros
     path('feeders/', views.feeders_list, name='feeders'),
     path('feeders/add/', views.feeder_add, name='feeder_add'),
     path('feeders/<int:feeder_id>/edit/', views.feeder_edit, name='feeder_edit'),
     path('feeders/<int:feeder_id>/', views.feeder_detail, name='feeder_detail'),
-    # Users
+    #Usuarios
+    #path('users/', views.users_list, name='user_list'),
     path('users/', views.users_list, name='users'),
     path('users/add/', views.user_add, name='user_add'),
     path('users/<int:user_id>/', views.user_detail, name='user_detail'),
     path('users/<int:user_id>/edit/', views.user_edit, name='user_edit'),
+    path('users/<int:user_id>/delete/', views.user_delete, name='user_delete'),
     
-    # Alerts
+    # Alertas
     path('alerts/', views.alerts_list, name='alerts'),
+    path('alerts/add/', views.alert_add, name='alert_add'),
     path('alerts/<int:alert_id>/resolve/', views.alert_resolve, name='alert_resolve'),
     path('alerts/<int:alert_id>/dismiss/', views.alert_dismiss, name='alert_dismiss'),
-    
-    # Reports
+    path('alerts/<int:alert_id>/edit/', views.alert_edit, name='alert_edit'),    # Relatorios
     path('reports/', views.reports_index, name='reports'),
 ]

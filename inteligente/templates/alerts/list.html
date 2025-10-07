@@ -18,8 +18,8 @@
 </div>
 
 <!-- Filters -->
-<div class="filters-section">
-    <form method="get" class="filters-form">
+<div class="filters-section" style="display: flex; align-items: center; justify-content: space-between;">
+    <form method="get" class="filters-form" style="display: flex; align-items: center; gap: 10px;">
         <div class="filter-group">
             <select name="severity">
                 <option value="">Todas as Severidades</option>
@@ -39,6 +39,10 @@
         </div>
         <button type="submit" class="btn btn-secondary">Filtrar</button>
     </form>
+    <a href="/alerts/add/" class="btn btn-primary">
+        <i class="fas fa-plus"></i>
+        Adicionar Alerta
+    </a>
 </div>
 
 <!-- Pending Alerts -->

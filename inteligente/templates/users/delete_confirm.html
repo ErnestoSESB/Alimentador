@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Confirmar Exclusão{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Excluir Usuário</h1>
+</div>
+<div class="alert alert-warning">
+    Tem certeza que deseja excluir o usuário <strong>{{ user_obj.get_full_name }}</strong>?
+    <br>
+    Esta ação não pode ser desfeita!
+</div>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sim, excluir</button>
+    <a href="{% url 'user_edit' user_obj.id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

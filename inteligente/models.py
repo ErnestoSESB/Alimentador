@@ -1,6 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from django.contrib import admin
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+import uuid
 
 # Create your models here.
 
@@ -92,20 +97,23 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 class UserProfile(models.Model):
-    """Extended user profile"""
     ROLE_CHOICES = [
         ('admin', 'Administrador'),
         ('farmer', 'Agricultor'),
-        ('operator', 'Operador'),
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='operator')
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='farmer')
     phone = models.CharField(max_length=20, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return f"{self.user.get_full_name()} - {self.get_role_display()}"
+
+    @property
+    def is_admin(self):
+        return self.user.is_superuser or self.role == 'admin'
 
 class Feeder(models.Model):
     """Animal feeder model"""
@@ -162,6 +170,7 @@ class Alert(models.Model):
         ('high', 'Alto'),
     ]
     
+    #alert_id = models.UUIDField(default=uuid.uuid4,unique=True, editable=False, null=False, blank=False)
     feeder = models.ForeignKey('Feeder', on_delete=models.CASCADE, related_name='alerts')
     feeder_name = models.CharField(max_length=100, verbose_name='Nome do Alimentador')  # Campo obrigatório
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
@@ -215,3 +224,15 @@ class FeedingLog(models.Model):
     
     def __str__(self):
         return f"{self.feeder.name} - {self.timestamp.strftime('%d/%m/%Y %H:%M')}"
+
+# Commenting out problematic signals that cause UNIQUE constraint errors
+# @receiver(post_save, sender=User)
+# def create_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         if not instance.is_superuser:  # Não cria perfil para superusuário
+#             UserProfile.objects.create(user=instance)
+
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     if hasattr(instance, 'profile'):
+#         instance.profile.save()

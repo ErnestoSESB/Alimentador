@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Usuário - {{ user_obj.get_full_name|default:user_obj.username }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Editar Usuário</h1>
+        <p>Alterar informações de {{ user_obj.get_full_name|default:user_obj.username }}</p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'user_detail' user_obj.id %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </a>
+    </div>
+</div>
+
+<div class="form-section">
+    <div class="form-container">
+        <form method="post" class="user-form">
+            {% csrf_token %}
+            
+            <div class="form-grid">
+                <!-- Personal Information -->
+                <div class="form-group">
+                    <label for="first_name">
+                        <i class="fas fa-user"></i>
+                        Nome
+                    </label>
+                    <input type="text" id="first_name" name="first_name" 
+                           value="{{ user_obj.first_name }}" 
+                           placeholder="Digite o nome" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="last_name">
+                        <i class="fas fa-user"></i>
+                        Sobrenome
+                    </label>
+                    <input type="text" id="last_name" name="last_name" 
+                           value="{{ user_obj.last_name }}" 
+                           placeholder="Digite o sobrenome">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i>
+                        E-mail
+                    </label>
+                    <input type="email" id="email" name="email" 
+                           value="{{ user_obj.email }}" 
+                           placeholder="Digite o e-mail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">
+                        <i class="fas fa-phone"></i>
+                        Telefone
+                    </label>
+                    <input type="text" id="phone" name="phone" 
+                           value="{{ user_obj.profile.phone|default:'' }}" 
+                           placeholder="Digite o telefone">
+                </div>
+                
+                <div class="form-group form-group-full">
+                    <label for="address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Endereço
+                    </label>
+                    <input type="text" id="address" name="address" 
+                           value="{{ user_obj.profile.address|default:'' }}" 
+                           placeholder="Digite o endereço completo">
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">
+                        <i class="fas fa-briefcase"></i>
+                        Função
+                    </label>
+                    <select id="role" name="role" required>
+                        <option value="operator" {% if user_obj.profile.role == 'operator' %}selected{% endif %}>Operador</option>
+                        <option value="farmer" {% if user_obj.profile.role == 'farmer' %}selected{% endif %}>Agricultor</option>
+                        <option value="admin" {% if user_obj.profile.role == 'admin' %}selected{% endif %}>Administrador</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Salvar Alterações
+                </button>
+                <a href="{% url 'user_detail' user_obj.id %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </a>
+            </div>
+        </form>
+        
+        <!-- Danger Zone -->
+        <div class="danger-zone">
+            <h3>
+                <i class="fas fa-exclamation-triangle"></i>
+                Zona de Perigo
+            </h3>
+            <p>As ações abaixo são irreversíveis. Tenha cuidado!</p>
+            <a href="{% url 'user_delete' user_obj.id %}" class="btn btn-danger" 
+               onclick="return confirm('Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.')">
+                <i class="fas fa-trash"></i>
+                Excluir Usuário
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-section {
+    background: white;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-container {
+    padding: 2rem;
+}
+
+.user-form {
+    margin-bottom: 2rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    height: 3rem;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    color: #374151;
+    background-color: #f9fafb;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+    background-color: white;
+}
+
+.form-group input::placeholder {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    padding-top: 1rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.danger-zone {
+    padding: 1.5rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 0.5rem;
+    margin-top: 2rem;
+}
+
+.danger-zone h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #dc2626;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.danger-zone p {
+    color: #7f1d1d;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+    border-color: #dc2626;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-container {
+        padding: 1rem;
+    }
+}
+</style>
+{% endblock %}
