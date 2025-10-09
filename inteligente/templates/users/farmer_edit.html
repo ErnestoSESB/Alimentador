@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Meu Perfil - SmartFeeder{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-title">
+        <h1>Editar Meu Perfil</h1>
+        <p>Atualize suas informações pessoais e resumo executivo</p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            Voltar ao Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="form-container">
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <!-- Informações Pessoais -->
+        <div class="form-section">
+            <h3>Informações Pessoais</h3>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ user_form.username.id_for_label }}">Nome de Usuário</label>
+                        {{ user_form.username }}
+                        {% if user_form.username.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ user_form.username.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ user_form.email.id_for_label }}">E-mail</label>
+                        {{ user_form.email }}
+                        {% if user_form.email.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ user_form.email.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ user_form.first_name.id_for_label }}">Nome</label>
+                        {{ user_form.first_name }}
+                        {% if user_form.first_name.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ user_form.first_name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ user_form.last_name.id_for_label }}">Sobrenome</label>
+                        {{ user_form.last_name }}
+                        {% if user_form.last_name.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ user_form.last_name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alterar Senha (Opcional) -->
+        <div class="form-section">
+            <h3>Alterar Senha (Opcional)</h3>
+            <p class="text-muted">Deixe os campos em branco se não desejar alterar a senha.</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ user_form.password.id_for_label }}">Nova Senha</label>
+                        {{ user_form.password }}
+                        {% if user_form.password.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ user_form.password.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ user_form.confirm_password.id_for_label }}">Confirme a Nova Senha</label>
+                        {{ user_form.confirm_password }}
+                        {% if user_form.confirm_password.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ user_form.confirm_password.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações de Contato -->
+        <div class="form-section">
+            <h3>Informações de Contato</h3>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ profile_form.phone.id_for_label }}">{{ profile_form.phone.label }}</label>
+                        {{ profile_form.phone }}
+                        {% if profile_form.phone.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ profile_form.phone.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ profile_form.address.id_for_label }}">{{ profile_form.address.label }}</label>
+                        {{ profile_form.address }}
+                        {% if profile_form.address.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ profile_form.address.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumo Executivo Personalizado -->
+        <div class="form-section">
+            <h3>
+                <i class="fas fa-chart-line"></i>
+                Resumo Executivo Personalizado
+            </h3>
+            <p class="text-muted">
+                {{ profile_form.custom_executive_summary.help_text }}
+            </p>
+            
+            <div class="form-group">
+                <label for="{{ profile_form.custom_executive_summary.id_for_label }}">{{ profile_form.custom_executive_summary.label }}</label>
+                {{ profile_form.custom_executive_summary }}
+                {% if profile_form.custom_executive_summary.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ profile_form.custom_executive_summary.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Salvar Alterações
+            </button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+                Cancelar
+            </a>
+            <a href="{% url 'reports' %}" class="btn btn-info">
+                <i class="fas fa-chart-bar"></i>
+                Ver Relatórios
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-section {
+    background: white;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-section h3 {
+    color: #2c5530;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #4caf50;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+</style>
+{% endblock %}

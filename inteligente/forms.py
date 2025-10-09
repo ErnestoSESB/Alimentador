@@ -1,4 +1,5 @@
 from django import forms
+from django.db import models
 from .models import Agricultor, Animal, User, Alimentador, Alimento, Visitante, Relatorio, UserProfile, Feeder, Alert, MaintenanceLog, FeedingLog
 
 class agricultorForm(forms.ModelForm):
@@ -29,12 +30,83 @@ class visitanteForm(forms.ModelForm):
 class feederForm(forms.ModelForm):
     class Meta:
         model = Feeder
-        fields = '__all__'
+        fields = ['name', 'location', 'owner', 'status', 'food_level', 'capacity', 'daily_consumption', 'last_maintenance', 'next_maintenance']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome do alimentador'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Localização'}),
+            'owner': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome do proprietário'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'food_level': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 100}),
+            'capacity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'daily_consumption': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'last_maintenance': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'next_maintenance': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+
+class FarmerFeederForm(forms.ModelForm):
+    """Formulário simplificado para agricultores"""
+    class Meta:
+        model = Feeder
+        fields = ['name', 'location', 'status', 'food_level', 'capacity', 'daily_consumption']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome do alimentador'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Localização'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'food_level': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 100}),
+            'capacity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'daily_consumption': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+        }
+        labels = {
+            'name': 'Nome do Alimentador',
+            'location': 'Localização',
+            'status': 'Status',
+            'food_level': 'Nível de Ração (%)',
+            'capacity': 'Capacidade (kg)',
+            'daily_consumption': 'Consumo Diário (kg)',
+        }
 
 class alertForm(forms.ModelForm):
     class Meta:
         model = Alert
-        fields = '__all__'
+        fields = ['feeder', 'type', 'message', 'severity']
+        widgets = {
+            'feeder': forms.Select(attrs={'class': 'form-control'}),
+            'type': forms.Select(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Digite a descrição do alerta...'}),
+            'severity': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'feeder': 'Alimentador',
+            'type': 'Tipo do Alerta',
+            'message': 'Mensagem',
+            'severity': 'Severidade',
+        }
+
+class FarmerAlertForm(forms.ModelForm):
+    """Formulário de alertas para agricultores"""
+    class Meta:
+        model = Alert
+        fields = ['feeder', 'type', 'message', 'severity']
+        widgets = {
+            'feeder': forms.Select(attrs={'class': 'form-control'}),
+            'type': forms.Select(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Digite a descrição do alerta...'}),
+            'severity': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'feeder': 'Alimentador',
+            'type': 'Tipo do Alerta',
+            'message': 'Mensagem',
+            'severity': 'Severidade',
+        }
+
+    def __init__(self, user=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user:
+            user_full_name = user.get_full_name() or user.username
+            self.fields['feeder'].queryset = Feeder.objects.filter(owner=user_full_name)
+            
+        self.fields['feeder'].empty_label = "Selecione um alimentador"
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Senha")
@@ -50,7 +122,6 @@ class UserForm(forms.ModelForm):
             'email': 'E-mail',
         }
 
-    #Aqui faz a validação para não repetir o email do usuario e quebrar essa bosta
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if email and User.objects.filter(email=email).exists():
@@ -82,3 +153,26 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['role', 'phone', 'address']
+
+class FarmerProfileForm(forms.ModelForm):
+    """Formulário para agricultores editarem seu próprio perfil"""
+    class Meta:
+        model = UserProfile
+        fields = ['phone', 'address', 'custom_executive_summary']
+        widgets = {
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Telefone'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Endereço completo'}),
+            'custom_executive_summary': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'rows': 6, 
+                'placeholder': 'Digite seu resumo executivo personalizado...'
+            }),
+        }
+        labels = {
+            'phone': 'Telefone',
+            'address': 'Endereço',
+            'custom_executive_summary': 'Resumo Executivo Personalizado',
+        }
+        help_texts = {
+            'custom_executive_summary': 'Este texto será exibido na seção de resumo executivo dos seus relatórios. Você pode incluir informações sobre sua operação, objetivos, observações, etc.',
+        }

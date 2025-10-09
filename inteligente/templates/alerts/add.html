@@ -30,39 +30,35 @@
             <h2 class="form-title">Informações do Alerta</h2>
             
             <div class="form-group">
-                <label for="feeder">Alimentador:</label>
-                <select name="feeder" id="feeder" required>
-                    <option value="">Selecione um alimentador</option>
-                    {% for feeder in feeders %}
-                        <option value="{{ feeder.id }}">{{ feeder.name }} - {{ feeder.location }}</option>
-                    {% endfor %}
-                </select>
+                <label for="{{ form.feeder.id_for_label }}">{{ form.feeder.label }}:</label>
+                {{ form.feeder }}
+                {% if form.feeder.errors %}
+                    <div class="text-danger">{{ form.feeder.errors }}</div>
+                {% endif %}
             </div>
             
             <div class="form-group">
-                <label for="type">Tipo do Alerta:</label>
-                <select name="type" id="type" required>
-                    <option value="">Selecione o tipo</option>
-                    <option value="low_food">Nível Baixo de Ração</option>
-                    <option value="maintenance">Manutenção Necessária</option>
-                    <option value="error">Erro no Sistema</option>
-                    <option value="offline">Equipamento Offline</option>
-                </select>
+                <label for="{{ form.type.id_for_label }}">{{ form.type.label }}:</label>
+                {{ form.type }}
+                {% if form.type.errors %}
+                    <div class="text-danger">{{ form.type.errors }}</div>
+                {% endif %}
             </div>
             
             <div class="form-group">
-                <label for="message">Mensagem:</label>
-                <textarea name="message" id="message" rows="4" required placeholder="Digite a descrição do alerta..."></textarea>
+                <label for="{{ form.message.id_for_label }}">{{ form.message.label }}:</label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                    <div class="text-danger">{{ form.message.errors }}</div>
+                {% endif %}
             </div>
             
             <div class="form-group">
-                <label for="severity">Severidade:</label>
-                <select name="severity" id="severity" required>
-                    <option value="">Selecione a severidade</option>
-                    <option value="low">Baixo</option>
-                    <option value="medium" selected>Médio</option>
-                    <option value="high">Alto</option>
-                </select>
+                <label for="{{ form.severity.id_for_label }}">{{ form.severity.label }}:</label>
+                {{ form.severity }}
+                {% if form.severity.errors %}
+                    <div class="text-danger">{{ form.severity.errors }}</div>
+                {% endif %}
             </div>
             
             <button type="submit" class="btn btn-primary">

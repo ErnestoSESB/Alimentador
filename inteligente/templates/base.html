@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}AgroFeeder - Sistema de Alimentação Automática{% endblock %}</title>
+    <title>{% block title %}Smart Feeder - Sistema de Alimentação Automática{% endblock %}</title>
     <link rel="stylesheet" href="{% load static %}{% static 'css/style.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -13,7 +13,7 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <h2 class="logo-title">AgroFeeder</h2>
+                    <h2 class="logo-title">SmartFeeder</h2>
                     <p class="logo-subtitle">Painel de Controle</p>
                 </div>
                 <button class="sidebar-close" id="sidebarClose">
@@ -30,10 +30,18 @@
                     <i class="fas fa-cogs"></i>
                     <span>Alimentadores</span>
                 </a>
+                {% if user.is_superuser or user.profile.role == 'admin' %}
                 <a href="{% url 'users' %}" class="nav-item {% if request.resolver_match.url_name == 'users' %}active{% endif %}">
                     <i class="fas fa-users"></i>
                     <span>Usuários</span>
                 </a>
+                {% else %}
+                <!-- Link para agricultores editarem seu próprio perfil -->
+                <a href="{% url 'farmer_profile_edit' %}" class="nav-item {% if request.resolver_match.url_name == 'farmer_profile_edit' %}active{% endif %}">
+                    <i class="fas fa-user-edit"></i>
+                    <span>Meu Perfil</span>
+                </a>
+                {% endif %}
                 <a href="{% url 'alerts' %}" class="nav-item {% if request.resolver_match.url_name == 'alerts' %}active{% endif %}">
                     <i class="fas fa-exclamation-triangle"></i>
                     <span>Alertas</span>
@@ -59,7 +67,7 @@
                         <i class="fas fa-bars"></i>
                     </button>
                     <div class="header-title">
-                        <h1>AgroFeeder</h1>
+                        <h1>SmartFeeder</h1>
                         <p class="header-subtitle">Sistema de Alimentação Automática</p>
                     </div>
                 </div>
@@ -74,7 +82,17 @@
                     <div class="user-menu">
                         <div class="user-info">
                             <p class="user-name">{{ user.get_full_name|default:user.username }}</p>
-                            <p class="user-role">{{ user.profile.role|default:'Usuário' }}</p>
+                            <p class="user-role">
+                                {% if user.is_superuser %}
+                                    Super Admin
+                                {% elif user.profile.role == 'admin' %}
+                                    Administrador
+                                {% elif user.profile.role == 'farmer' %}
+                                    Agricultor
+                                {% else %}
+                                    Usuário
+                                {% endif %}
+                            </p>
                         </div>
                         <div class="user-avatar">
                             <i class="fas fa-user"></i>
@@ -89,6 +107,20 @@
 
             <!-- Page Content -->
             <main class="page-content">
+                <!-- Global Messages -->
+                {% if messages %}
+                    <div class="messages-container">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible">
+                                {{ message }}
+                                <button type="button" class="close" onclick="this.parentElement.style.display='none'">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
                 {% block content %}{% endblock %}
             </main>
         </div>

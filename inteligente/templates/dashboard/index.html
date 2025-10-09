@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Dashboard - AgroFeeder{% endblock %}
+{% block title %}Dashboard - SmartFeeder{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -119,4 +119,100 @@
     </div>
     </div>
 </div>
+
+<!-- Quick Actions for Farmers -->
+{% if user.profile.role == 'farmer' %}
+<div class="dashboard-section">
+    <h2>Ações Rápidas</h2>
+    <div class="quick-actions">
+        <div class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-user-edit"></i>
+            </div>
+            <div class="action-content">
+                <h3>Editar Meu Perfil</h3>
+                <p>Atualize suas informações e resumo executivo personalizado</p>
+                <a href="{% url 'farmer_profile_edit' %}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i>
+                    Editar Perfil
+                </a>
+            </div>
+        </div>
+        
+        <div class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="action-content">
+                <h3>Resumo Executivo</h3>
+                <p>{% if user.profile.custom_executive_summary %}Você tem um resumo personalizado{% else %}Crie seu resumo executivo personalizado{% endif %}</p>
+                <a href="{% url 'reports' %}" class="btn btn-info">
+                    <i class="fas fa-chart-bar"></i>
+                    Ver Relatórios
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.action-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-left: 4px solid #4caf50;
+}
+
+.action-icon {
+    background: #e8f5e8;
+    padding: 1rem;
+    border-radius: 50%;
+    color: #4caf50;
+    font-size: 1.5rem;
+}
+
+.action-content h3 {
+    margin: 0 0 0.5rem 0;
+    color: #2c5530;
+}
+
+.action-content p {
+    margin: 0 0 1rem 0;
+    color: #666;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background-color: #4caf50;
+    color: white;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+</style>
+{% endif %}
 {% endblock %}

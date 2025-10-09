@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from inteligente.views import farmer_template, index
 from inteligente import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     
@@ -31,7 +33,7 @@ from inteligente import views
 urlpatterns = [
     # logn/autenticação
     path('admin/', admin.site.urls),
-    path('', views.login_view, name='login'),
+    path('', views.landing_page, name='landing_page'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     
@@ -51,6 +53,7 @@ urlpatterns = [
     path('users/<int:user_id>/', views.user_detail, name='user_detail'),
     path('users/<int:user_id>/edit/', views.user_edit, name='user_edit'),
     path('users/<int:user_id>/delete/', views.user_delete, name='user_delete'),
+    path('profile/edit/', views.farmer_profile_edit, name='farmer_profile_edit'),
     
     # Alertas
     path('alerts/', views.alerts_list, name='alerts'),
@@ -60,3 +63,7 @@ urlpatterns = [
     path('alerts/<int:alert_id>/edit/', views.alert_edit, name='alert_edit'),    # Relatorios
     path('reports/', views.reports_index, name='reports'),
 ]
+
+# Serve static files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

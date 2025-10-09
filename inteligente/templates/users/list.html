@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Usuários - AgroFeeder{% endblock %}
+{% block title %}Usuários - SmartFeedereeder{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -72,6 +72,7 @@
                 </div>
             </div>
             <div class="user-meta">
+                <span>Nome do Usuario: {{ user.username }}</span>
                 <div class="meta-item">
                     <i class="fas fa-calendar"></i>
                     <span>Cadastro: {{ user.date_joined|date:"d/m/Y" }}</span>

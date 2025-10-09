@@ -91,7 +91,6 @@ class Relatorio(models.Model):
     def __str__(self):
         return f"Report {self.id} - {self.feeder.model}"
 
-# Django Models for AgroFeeder System
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -106,6 +105,8 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='farmer')
     phone = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
+    created_by_admin = models.BooleanField(default=False, verbose_name='Criado por Administrador')
+    custom_executive_summary = models.TextField(blank=True, null=True, verbose_name='Resumo Executivo Personalizado')
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -181,7 +182,6 @@ class Alert(models.Model):
     resolved_at = models.DateTimeField(null=True, blank=True, verbose_name='Resolvido em')
 
     def save(self, *args, **kwargs):
-        # Preenche automaticamente o nome do alimentador
         if self.feeder and not self.feeder_name:
             self.feeder_name = self.feeder.name
         super().save(*args, **kwargs)
@@ -224,15 +224,3 @@ class FeedingLog(models.Model):
     
     def __str__(self):
         return f"{self.feeder.name} - {self.timestamp.strftime('%d/%m/%Y %H:%M')}"
-
-# Commenting out problematic signals that cause UNIQUE constraint errors
-# @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#         if not instance.is_superuser:  # Não cria perfil para superusuário
-#             UserProfile.objects.create(user=instance)
-
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-#     if hasattr(instance, 'profile'):
-#         instance.profile.save()

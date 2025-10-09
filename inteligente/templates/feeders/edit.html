@@ -2,28 +2,160 @@
 {% block title %}Editar Alimentador{% endblock %}
 {% block content %}
 <div class="page-header">
-    <div class="page-title">
-        <h1>Editar Alimentador</h1>
-        <p>Atualize as informações do alimentador</p>
+    <h1 class="page-title">
+        <i class="fas fa-edit"></i>
+        Editar Alimentador
+    </h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Editando: {{ feeder.name }}</h3>
     </div>
-    <div class="page-actions">
-        <a href="{% url 'feeder_detail' feeder.id %}" class="btn btn-outline">
-            <i class="fas fa-arrow-left"></i>
-            Voltar
-        </a>
+    <div class="card-body">
+        <form method="post" class="form-container">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <h4>Corrija os seguintes erros:</h4>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>
+                                    {% if field == 'name' %}Nome: {{ error }}
+                                    {% elif field == 'location' %}Localização: {{ error }}
+                                    {% elif field == 'owner' %}Proprietário: {{ error }}
+                                    {% elif field == 'status' %}Status: {{ error }}
+                                    {% elif field == 'food_level' %}Nível de Ração: {{ error }}
+                                    {% elif field == 'capacity' %}Capacidade: {{ error }}
+                                    {% elif field == 'daily_consumption' %}Consumo Diário: {{ error }}
+                                    {% elif field == 'last_maintenance' %}Última Manutenção: {{ error }}
+                                    {% elif field == 'next_maintenance' %}Próxima Manutenção: {{ error }}
+                                    {% elif field == 'next_feeding_time' %}Próxima Alimentação: Este campo é obrigatório.
+                                    {% else %}{{ field }}: {{ error }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}">{{ form.name.label }}:</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.location.id_for_label }}">{{ form.location.label }}:</label>
+                        {{ form.location }}
+                        {% if form.location.errors %}
+                            <div class="text-danger">{{ form.location.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                {% if not is_farmer %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.owner.id_for_label }}">{{ form.owner.label }}:</label>
+                        {{ form.owner }}
+                        {% if form.owner.errors %}
+                            <div class="text-danger">{{ form.owner.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.status.id_for_label }}">{{ form.status.label }}:</label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <div class="text-danger">{{ form.status.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.food_level.id_for_label }}">{{ form.food_level.label }}:</label>
+                        {{ form.food_level }}
+                        {% if form.food_level.errors %}
+                            <div class="text-danger">{{ form.food_level.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ form.capacity.id_for_label }}">{{ form.capacity.label }}:</label>
+                        {{ form.capacity }}
+                        {% if form.capacity.errors %}
+                            <div class="text-danger">{{ form.capacity.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ form.daily_consumption.id_for_label }}">{{ form.daily_consumption.label }}:</label>
+                        {{ form.daily_consumption }}
+                        {% if form.daily_consumption.errors %}
+                            <div class="text-danger">{{ form.daily_consumption.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if not is_farmer %}
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ form.last_maintenance.id_for_label }}">{{ form.last_maintenance.label }}:</label>
+                        {{ form.last_maintenance }}
+                        {% if form.last_maintenance.errors %}
+                            <div class="text-danger">{{ form.last_maintenance.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            {% if not is_farmer %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.next_maintenance.id_for_label }}">{{ form.next_maintenance.label }}:</label>
+                        {{ form.next_maintenance }}
+                        {% if form.next_maintenance.errors %}
+                            <div class="text-danger">{{ form.next_maintenance.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Salvar Alterações
+                </button>
+                <a href="{% url 'feeder_detail' feeder.id %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 
-<div class="feeder-card">
-    <form method="post" class="form-container">
-        {% csrf_token %}
-        <div class="form-group">
-            {{ form.as_p }}
-        </div>
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i>
-            Salvar
-        </button>
-    </form>
-</div>
 {% endblock %}

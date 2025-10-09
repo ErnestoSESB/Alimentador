@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Relatórios - AgroFeeder{% endblock %}
+{% block title %}Relatórios{% if is_farmer %} - Meus Alimentadores{% else %} - Sistema Completo{% endif %} - SmartFeeder{% endblock %}
 
 {% block content %}
 <div class="page-header">
     <div class="page-title">
-        <h1>Relatórios</h1>
-        <p>Análises e estatísticas do sistema</p>
+        <h1>Relatórios{% if is_farmer %} - Meus Alimentadores{% else %} - Sistema Completo{% endif %}</h1>
+        <p>Análises e estatísticas {% if is_farmer %}dos seus alimentadores{% else %}de todo o sistema{% endif %}</p>
+        {% if report_data.scope_label %}
+        <small class="text-muted">
+            <i class="fas fa-info-circle"></i>
+            Dados baseados em {{ report_data.scope_label }}
+        </small>
+        {% endif %}
     </div>
     <div class="page-actions">
         <select id="periodSelect" class="period-select">
@@ -23,6 +29,20 @@
     </div>
 </div>
 
+{% if context_message %}
+<!-- Mensagem quando não há dados -->
+<div class="alert alert-info">
+    <i class="fas fa-info-circle"></i>
+    {{ context_message }}
+    {% if is_farmer %}
+    <br><br>
+    <a href="{% url 'feeders_add' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i>
+        Cadastrar Primeiro Alimentador
+    </a>
+    {% endif %}
+</div>
+{% else %}
 <!-- Key Metrics -->
 <div class="metrics-grid">
     <div class="metric-card metric-green">
@@ -31,9 +51,15 @@
                 <i class="fas fa-play-circle"></i>
             </div>
             <div class="metric-info">
-                <h3>{{ report_data.feeding_efficiency|default:94 }}%</h3>
+                <h3>{{ report_data.feeding_efficiency }}%</h3>
                 <p>Eficiência de Alimentação</p>
-                <span class="metric-trend positive">+2.3% vs período anterior</span>
+                {% if report_data.feeding_efficiency >= 90 %}
+                <span class="metric-trend positive">Excelente performance</span>
+                {% elif report_data.feeding_efficiency >= 80 %}
+                <span class="metric-trend neutral">Performance adequada</span>
+                {% else %}
+                <span class="metric-trend negative">Necessita atenção</span>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -44,9 +70,9 @@
                 <i class="fas fa-chart-bar"></i>
             </div>
             <div class="metric-info">
-                <h3>{{ report_data.total_consumption|default:1250 }}kg</h3>
-                <p>Consumo Total</p>
-                <span class="metric-trend positive">+5.1% vs período anterior</span>
+                <h3>{{ report_data.total_consumption }}kg</h3>
+                <p>Consumo Total{% if is_farmer %} - Seus Alimentadores{% endif %}</p>
+                <span class="metric-trend positive">Baseado em {{ report_data.total_feeders }} alimentador{{ report_data.total_feeders|pluralize:"es" }}</span>
             </div>
         </div>
     </div>
@@ -57,9 +83,15 @@
                 <i class="fas fa-chart-line"></i>
             </div>
             <div class="metric-info">
-                <h3>{{ report_data.average_level|default:65 }}%</h3>
+                <h3>{{ report_data.average_level }}%</h3>
                 <p>Nível Médio de Ração</p>
-                <span class="metric-trend negative">-1.2% vs período anterior</span>
+                {% if report_data.average_level >= 70 %}
+                <span class="metric-trend positive">Níveis adequados</span>
+                {% elif report_data.average_level >= 50 %}
+                <span class="metric-trend neutral">Monitorar níveis</span>
+                {% else %}
+                <span class="metric-trend negative">Reabastecer urgente</span>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -68,7 +100,7 @@
 <!-- Consumption Chart -->
 <div class="chart-section">
     <div class="chart-header">
-        <h2>Consumo Mensal (kg)</h2>
+        <h2>Consumo Mensal (kg){% if is_farmer %} - Seus Alimentadores{% endif %}</h2>
         <div class="chart-period">
             <i class="fas fa-calendar"></i>
             <span>Jan - Jun 2024</span>
@@ -76,30 +108,33 @@
     </div>
     <div class="chart-container">
         <div class="chart-bars">
-            <div class="chart-bar" data-value="980" style="height: 75%">
-                <div class="bar-value">980</div>
+            <!-- Valores simulados baseados no consumo total -->
+            {% with base_consumption=report_data.total_consumption %}
+            <div class="chart-bar" data-value="{{ base_consumption|add:'-100' }}" style="height: 75%">
+                <div class="bar-value">{{ base_consumption|add:'-100' }}</div>
                 <div class="bar-label">Jan</div>
             </div>
-            <div class="chart-bar" data-value="1100" style="height: 85%">
-                <div class="bar-value">1100</div>
+            <div class="chart-bar" data-value="{{ base_consumption|add:'-50' }}" style="height: 85%">
+                <div class="bar-value">{{ base_consumption|add:'-50' }}</div>
                 <div class="bar-label">Fev</div>
             </div>
-            <div class="chart-bar" data-value="1200" style="height: 92%">
-                <div class="bar-value">1200</div>
+            <div class="chart-bar" data-value="{{ base_consumption|add:'50' }}" style="height: 92%">
+                <div class="bar-value">{{ base_consumption|add:'50' }}</div>
                 <div class="bar-label">Mar</div>
             </div>
-            <div class="chart-bar" data-value="1150" style="height: 88%">
-                <div class="bar-value">1150</div>
+            <div class="chart-bar" data-value="{{ base_consumption|add:'-25' }}" style="height: 88%">
+                <div class="bar-value">{{ base_consumption|add:'-25' }}</div>
                 <div class="bar-label">Abr</div>
             </div>
-            <div class="chart-bar" data-value="1250" style="height: 96%">
-                <div class="bar-value">1250</div>
+            <div class="chart-bar" data-value="{{ base_consumption }}" style="height: 96%">
+                <div class="bar-value">{{ base_consumption }}</div>
                 <div class="bar-label">Mai</div>
             </div>
-            <div class="chart-bar" data-value="1180" style="height: 90%">
-                <div class="bar-value">1180</div>
+            <div class="chart-bar" data-value="{{ base_consumption|add:'-75' }}" style="height: 90%">
+                <div class="bar-value">{{ base_consumption|add:'-75' }}</div>
                 <div class="bar-label">Jun</div>
             </div>
+            {% endwith %}
         </div>
     </div>
 </div>
@@ -107,43 +142,46 @@
 <div class="reports-grid">
     <!-- System Performance -->
     <div class="report-section">
-        <h2>Performance do Sistema</h2>
+        <h2>Performance {% if is_farmer %}dos Seus Alimentadores{% else %}do Sistema{% endif %}</h2>
         <div class="performance-metrics">
             <div class="performance-item">
                 <span class="performance-label">Tempo de Atividade</span>
-                <span class="performance-value success">{{ report_data.system_uptime|default:99.2 }}%</span>
+                <span class="performance-value success">{{ report_data.system_uptime }}%</span>
             </div>
             <div class="performance-item">
                 <span class="performance-label">Manutenções Realizadas</span>
-                <span class="performance-value info">{{ report_data.maintenance_completed|default:8 }}</span>
+                <span class="performance-value info">{{ report_data.maintenance_completed }}</span>
             </div>
             <div class="performance-item">
                 <span class="performance-label">Alertas Gerados</span>
-                <span class="performance-value warning">{{ report_data.alerts_generated|default:12 }}</span>
+                <span class="performance-value {% if report_data.alerts_generated <= 2 %}success{% elif report_data.alerts_generated <= 5 %}warning{% else %}danger{% endif %}">{{ report_data.alerts_generated }}</span>
             </div>
+            {% if not is_farmer %}
+            <div class="performance-item">
+                <span class="performance-label">Total de Alimentadores</span>
+                <span class="performance-value info">{{ report_data.total_feeders }}</span>
+            </div>
+            {% endif %}
         </div>
     </div>
 
     <!-- Top Feeders -->
     <div class="report-section">
-        <h2>Alimentadores Mais Ativos</h2>
+        <h2>{% if is_farmer %}Seus Alimentadores{% else %}Alimentadores Mais Ativos{% endif %}</h2>
         <div class="top-feeders">
-            {% if top_feeders %}
-    {% for feeder in top_feeders %}
-    <div class="feeder-performance">
-        <div class="feeder-info">
-            <h4>{{ feeder.name }}</h4>
-            <span class="consumption">{{ feeder.consumption }}kg</span>
-        </div>
-        <div class="efficiency-bar">
-            <div class="efficiency-progress" style="width: {{ feeder.efficiency }}%"></div>
-            <span class="efficiency-value">{{ feeder.efficiency }}%</span>
-        </div>
-    </div>
-    {% endfor %}
-{% else %}
-    <p>Nenhum alimentador disponível.</p>
-{% endif %}
+            {% for feeder in top_feeders %}
+            <div class="feeder-performance">
+                <div class="feeder-info">
+                    <h4>{{ feeder.name }}</h4>
+                    <span class="consumption">{{ feeder.consumption }}kg</span>
+                    <small class="text-muted">{{ feeder.alerts_count }} alerta{{ feeder.alerts_count|pluralize:"s" }}</small>
+                </div>
+                <div class="efficiency-bar">
+                    <div class="efficiency-progress" style="width: {{ feeder.efficiency }}%"></div>
+                    <span class="efficiency-value">{{ feeder.efficiency }}%</span>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>
@@ -152,19 +190,70 @@
 <div class="summary-section">
     <h2>Resumo Executivo</h2>
     <div class="summary-content">
-        <p>
-            Durante o período analisado, o sistema de alimentação automática apresentou excelente performance 
-            com {{ report_data.feeding_efficiency|default:94 }}% de eficiência. O consumo total de ração foi de {{ report_data.total_consumption|default:1250 }}kg, 
-            representando um aumento de 5.1% em relação ao período anterior.
-        </p>
-        <p>
-            O sistema manteve {{ report_data.system_uptime|default:99.2 }}% de tempo de atividade, com {{ report_data.maintenance_completed|default:8 }} manutenções 
-            preventivas realizadas e {{ report_data.alerts_generated|default:12 }} alertas gerados para otimizar a operação.
-        </p>
-        <p>
-            Recomenda-se manter o cronograma atual de manutenções e monitorar os níveis de ração dos 
-            alimentadores com maior consumo para otimizar ainda mais a eficiência do sistema.
-        </p>
+        {% if is_farmer and not created_by_admin %}
+        <!-- Agricultor não adicionado por administrador - resumo em branco -->
+        <div class="alert alert-light">
+            <i class="fas fa-info-circle"></i>
+            <p class="mb-0">Resumo executivo não disponível.</p>
+            <small class="text-muted">Entre em contato com o administrador do sistema para obter acesso a análises detalhadas.</small>
+        </div>
+        {% elif is_farmer and custom_executive_summary %}
+        <!-- Resumo personalizado do agricultor -->
+        <div class="custom-summary">
+            <div class="alert alert-success mb-3">
+                <i class="fas fa-user-edit"></i>
+                <strong>Resumo Personalizado</strong> - Editado por você
+                <a href="{% url 'farmer_profile_edit' %}" class="btn btn-sm btn-outline-primary float-right">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+            </div>
+            <div class="custom-summary-content">
+                {{ custom_executive_summary|linebreaks }}
+            </div>
+        </div>
+        {% else %}
+        <!-- Resumo automático para admins ou agricultores sem resumo personalizado -->
+        <div class="auto-summary">
+            {% if is_farmer %}
+            <div class="alert alert-info mb-3">
+                <i class="fas fa-chart-line"></i>
+                <strong>Resumo Automático</strong> - Baseado nos seus dados
+                <a href="{% url 'farmer_profile_edit' %}" class="btn btn-sm btn-outline-primary float-right">
+                    <i class="fas fa-edit"></i> Personalizar
+                </a>
+            </div>
+            {% endif %}
+            
+            <p>
+                {% if is_farmer %}
+                Durante o período analisado, seus {{ report_data.total_feeders }} alimentador{{ report_data.total_feeders|pluralize:"es" }} 
+                apresentaram {{ report_data.feeding_efficiency }}% de eficiência de alimentação. O consumo total foi de {{ report_data.total_consumption }}kg.
+                {% else %}
+                Durante o período analisado, o sistema com {{ report_data.total_feeders }} alimentadores apresentou 
+                {{ report_data.feeding_efficiency }}% de eficiência geral. O consumo total de ração foi de {{ report_data.total_consumption }}kg.
+                {% endif %}
+            </p>
+            <p>
+                {% if is_farmer %}
+                Seus alimentadores mantiveram {{ report_data.system_uptime }}% de tempo de atividade, com {{ report_data.maintenance_completed }} 
+                manutenções realizadas e {{ report_data.alerts_generated }} alerta{{ report_data.alerts_generated|pluralize:"s" }} gerado{{ report_data.alerts_generated|pluralize:"s" }}.
+                {% else %}
+                O sistema manteve {{ report_data.system_uptime }}% de tempo de atividade, com {{ report_data.maintenance_completed }} manutenções 
+                preventivas realizadas e {{ report_data.alerts_generated }} alertas gerados em todo o sistema.
+                {% endif %}
+            </p>
+            <p>
+                {% if report_data.alerts_generated <= 2 %}
+                Excelente! {% if is_farmer %}Seus alimentadores estão{% else %}O sistema está{% endif %} funcionando de forma otimizada com poucos alertas.
+                {% elif report_data.alerts_generated <= 5 %}
+                Performance adequada. Recomenda-se monitorar os alimentadores que geram mais alertas.
+                {% else %}
+                Atenção! Alto número de alertas indica necessidade de manutenção preventiva e otimização do sistema.
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
     </div>
 </div>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,320 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFeeder Auto - Alimentador Automático para Pets</title>
+    <link rel="stylesheet" href="{% static 'css/landing_page.css' %}">
+</head>
+<body class="landing-page">
+    <!-- Header/Navigation -->
+    <header class="landing-header" id="header">
+        <nav class="nav landing-container">
+            <div class="nav-logo">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="6" width="18" height="12" rx="2" ry="2"></rect>
+                        <line x1="7" y1="6" x2="7" y2="2"></line>
+                        <line x1="13" y1="6" x2="13" y2="2"></line>
+                    </svg>
+                </div>
+                <span class="logo-text">SmartFeeder Auto</span>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link">Início</a>
+                <a href="#project" class="nav-link">Projeto</a>
+                <a href="#features" class="nav-link">Funcionalidades</a>
+                <a href="#about" class="nav-link">Sobre Nós</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="nav-toggle" id="nav-toggle">
+                <span class="nav-toggle-icon"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="landing-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">Alimentação Inteligente para Seu Pet</h1>
+                    <p class="hero-description">
+                        O futuro do cuidado animal está aqui. Controle a alimentação do seu pet de qualquer lugar,
+                        com tecnologia IoT avançada e automação inteligente.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#project" class="landing-btn landing-btn-primary">Conhecer o Projeto</a>
+                        <a href="#features" class="landing-btn landing-btn-secondary">Ver Funcionalidades</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="image-placeholder">
+                        <img src="{% static 'css/image/teste.webp' %}" alt="Alimentador Automático SmartFeeder" class="feeder-image">
+                        <p class="image-label">SmartFeeder Auto</p>
+                        <p class="image-sublabel">Alimentador Automático Inteligente</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Section -->
+    <section class="project" id="project">
+        <div class="landing-container">
+            <div class="section-header">
+                <h2 class="section-title">Sobre o Projeto</h2>
+                <div class="section-divider"></div>
+            </div>
+
+            <div class="project-content">
+                <div class="project-card main-card">
+                    <h3 class="card-title">Trabalho de Conclusão de Curso</h3>
+                    <p class="card-text">
+                        O <strong>SmartFeeder </strong> é um sistema de alimentação automática para animais de estimação
+                        desenvolvido como projeto de TCC. Combinando hardware e software, o alimentador oferece uma solução
+                        completa para o cuidado automatizado de pets.
+                    </p>
+                    <p class="card-text">
+                        Utilizando tecnologias de Internet das Coisas (IoT), o sistema permite que tutores programem horários
+                        de alimentação, controlem porções e monitorem o consumo alimentar de seus animais remotamente através
+                        de um aplicativo intuitivo.
+                    </p>
+                </div>
+
+                <div class="project-grid">
+                    <div class="project-card accent-card">
+                        <h4 class="card-subtitle">Objetivo</h4>
+                        <p class="card-text">
+                            Proporcionar praticidade e segurança alimentar para pets, garantindo refeições regulares mesmo
+                            quando os tutores não estão em casa.
+                        </p>
+                    </div>
+                    <div class="project-card accent-card">
+                        <h4 class="card-subtitle">Tecnologia</h4>
+                        <p class="card-text">
+                            Sistema embarcado com conectividade WiFi, controle via aplicativo web e automação programável
+                            com interface amigável.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="landing-container">
+            <div class="section-header">
+                <h2 class="section-title light">Funcionalidades</h2>
+                <div class="section-divider light"></div>
+                <p class="section-subtitle">
+                    Tecnologia avançada para cuidar do seu pet com praticidade e eficiência
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Agendamento Automático</h3>
+                    <p class="feature-description">
+                        Programe horários específicos para alimentação e o sistema libera a porção automaticamente.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Controle Remoto</h3>
+                    <p class="feature-description">
+                        Gerencie a alimentação do seu pet de qualquer lugar através do aplicativo web.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                            <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Conectividade IoT</h3>
+                    <p class="feature-description">
+                        Conexão WiFi integrada para comunicação em tempo real com o sistema.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="6" width="18" height="12" rx="2" ry="2"></rect>
+                            <line x1="7" y1="6" x2="7" y2="2"></line>
+                            <line x1="13" y1="6" x2="13" y2="2"></line>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Controle de Porções</h3>
+                    <p class="feature-description">
+                        Defina a quantidade exata de ração para manter a dieta balanceada do seu pet.
+                    </p>
+                </div>
+            </div>
+
+            <div class="benefits">
+                <h3 class="benefits-title">Benefícios do Sistema</h3>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-number">24/7</div>
+                        <p class="benefit-text">Disponibilidade contínua</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-number">100%</div>
+                        <p class="benefit-text">Automático e confiável</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-number">∞</div>
+                        <p class="benefit-text">Programações ilimitadas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about" id="about">
+        <div class="landing-container">
+            <div class="section-header">
+                <h2 class="section-title">Sobre Nós</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle dark">
+                    Conheça os pesquisadores responsáveis pelo desenvolvimento deste projeto
+                </p>
+            </div>
+
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <span class="avatar-initials">SE</span>
+                    </div>
+                    <h3 class="team-name">Sílvio Ernesto</h3>
+                    <p class="team-role">Pesquisador</p>
+                    <p class="team-description">
+                        Responsável pelo desenvolvimento do sistema embarcado e integração de hardware do alimentador automático.
+                    </p>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <span class="avatar-initials">JS</span>
+                    </div>
+                    <h3 class="team-name">José Sarmento</h3>
+                    <p class="team-role">Pesquisador</p>
+                    <p class="team-description">
+                        Responsável pelo desenvolvimento da interface web e sistema de controle remoto via aplicativo.
+                    </p>
+                </div>
+            </div>
+
+            <div class="about-footer">
+                <p class="about-footer-text">
+                    Este projeto representa o resultado de meses de pesquisa, desenvolvimento e testes,
+                    combinando conhecimentos em eletrônica, programação e design de sistemas embarcados
+                    para criar uma solução inovadora no cuidado com animais de estimação.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="landing-container">
+            <h2 class="cta-title">Pronto para Conhecer Mais?</h2>
+            <p class="cta-description">
+                Acesse o sistema e descubra todas as funcionalidades do SmartFeeder Auto
+            </p>
+            <a href="{% url 'login' %}" class="landing-btn landing-btn-cta">
+                Acessar Sistema
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="landing-container">
+            <div class="footer-logo">
+                <div class="logo-icon small">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                </div>
+                <span class="logo-text footer-contact">Contate-nos 84999999999</span>
+            </div>
+            <p class="footer-text">© 2025 SmartFeeder Auto - Trabalho de Conclusão de Curso</p>
+            <p class="footer-text">Desenvolvido por Sílvio Ernesto e José Sarmento</p>
+        </div>
+    </footer>
+
+    <script>
+       
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+
+        navToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('show');
+            this.classList.toggle('active');
+        });
+
+        
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('show');
+                navToggle.classList.remove('active');
+            });
+        });
+
+        
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+    
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = document.querySelector('.landing-header').offsetHeight;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

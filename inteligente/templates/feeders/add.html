@@ -1,50 +1,156 @@
 {% extends 'base.html' %}
 {% block title %}Adicionar Alimentador{% endblock %}
 {% block content %}
-<h1>Adicionar Alimentador</h1>
-<form method="post" class="form-container">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="name">Nome:</label>
-        <input type="text" name="name" id="name" placeholder="Digite o nome do alimentador" required>
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="fas fa-plus-circle"></i>
+        Adicionar Alimentador
+    </h1>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Novo Alimentador</h3>
     </div>
-    <div class="form-group">
-        <label for="location">Localização:</label>
-        <input type="text" name="location" id="location" placeholder="Digite a localização" required>
+    <div class="card-body">
+        <form method="post" class="form-container">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <h4>Corrija os seguintes erros:</h4>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>
+                                    {% if field == 'name' %}Nome: {{ error }}
+                                    {% elif field == 'location' %}Localização: {{ error }}
+                                    {% elif field == 'owner' %}Proprietário: {{ error }}
+                                    {% elif field == 'status' %}Status: {{ error }}
+                                    {% elif field == 'food_level' %}Nível de Ração: {{ error }}
+                                    {% elif field == 'capacity' %}Capacidade: {{ error }}
+                                    {% elif field == 'daily_consumption' %}Consumo Diário: {{ error }}
+                                    {% elif field == 'last_maintenance' %}Última Manutenção: {{ error }}
+                                    {% elif field == 'next_maintenance' %}Próxima Manutenção: {{ error }}
+                                    {% elif field == 'next_feeding_time' %}Próxima Alimentação: Este campo é obrigatório.
+                                    {% else %}{{ field }}: {{ error }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}">{{ form.name.label }}:</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.location.id_for_label }}">{{ form.location.label }}:</label>
+                        {{ form.location }}
+                        {% if form.location.errors %}
+                            <div class="text-danger">{{ form.location.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                {% if not is_farmer %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.owner.id_for_label }}">{{ form.owner.label }}:</label>
+                        {{ form.owner }}
+                        {% if form.owner.errors %}
+                            <div class="text-danger">{{ form.owner.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.status.id_for_label }}">{{ form.status.label }}:</label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <div class="text-danger">{{ form.status.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ form.food_level.id_for_label }}">{{ form.food_level.label }}:</label>
+                        {{ form.food_level }}
+                        {% if form.food_level.errors %}
+                            <div class="text-danger">{{ form.food_level.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ form.capacity.id_for_label }}">{{ form.capacity.label }}:</label>
+                        {{ form.capacity }}
+                        {% if form.capacity.errors %}
+                            <div class="text-danger">{{ form.capacity.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ form.daily_consumption.id_for_label }}">{{ form.daily_consumption.label }}:</label>
+                        {{ form.daily_consumption }}
+                        {% if form.daily_consumption.errors %}
+                            <div class="text-danger">{{ form.daily_consumption.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            {% if not is_farmer %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.last_maintenance.id_for_label }}">{{ form.last_maintenance.label }}:</label>
+                        {{ form.last_maintenance }}
+                        {% if form.last_maintenance.errors %}
+                            <div class="text-danger">{{ form.last_maintenance.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.next_maintenance.id_for_label }}">{{ form.next_maintenance.label }}:</label>
+                        {{ form.next_maintenance }}
+                        {% if form.next_maintenance.errors %}
+                            <div class="text-danger">{{ form.next_maintenance.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Salvar Alimentador
+                </button>
+                <a href="{% url 'feeders' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar
+                </a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label for="owner">Proprietário:</label>
-        <input type="text" name="owner" id="owner" placeholder="Digite o nome do proprietário" required>
-    </div>
-    <div class="form-group">
-        <label for="status">Status:</label>
-        <select name="status" id="status" required>
-            <option value="active">Ativo</option>
-            <option value="inactive">Inativo</option>
-            <option value="maintance">Manutenção</option>
-            <option value="error">Erro</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="food_level">Nível de Ração:</label>
-        <input type="number" name="food_level" id="food_level" placeholder="Digite o nível de ração (%)" required>
-    </div>
-    <div class="form-group">
-        <label for="capacity">Capacidade:</label>
-        <input type="number" name="capacity" id="capacity" placeholder="Digite a capacidade total" required>
-    </div>
-    <div class="form-group">
-        <label for="daily_consumption">Consumo Diário:</label>
-        <input type="number" name="daily_consumption" id="daily_consumption" placeholder="Digite o consumo diário" required>
-    </div>
-    <div class="form-group">
-        <label for="last_maintenance">Última Manutenção:</label>
-        <input type="date" name="last_maintenance" id="last_maintenance" required>
-    </div>
-    <div class="form-group">
-        <label for="next_maintenance">Próxima Manutenção:</label>
-        <input type="date" name="next_maintenance" id="next_maintenance" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Salvar</button>
-</form>
+</div>
+
 {% endblock %}
