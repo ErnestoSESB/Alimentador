@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inteligente', '0003_userprofile_created_by_admin'),
+        ("inteligente", "0003_userprofile_created_by_admin"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userprofile',
-            name='custom_executive_summary',
-            field=models.TextField(blank=True, null=True, verbose_name='Resumo Executivo Personalizado'),
+            model_name="userprofile",
+            name="custom_executive_summary",
+            field=models.TextField(
+                blank=True, null=True, verbose_name="Resumo Executivo Personalizado"
+            ),
         ),
     ]

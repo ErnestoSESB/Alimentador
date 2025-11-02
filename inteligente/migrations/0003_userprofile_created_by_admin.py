@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inteligente', '0002_remove_alert_alert_id'),
+        ("inteligente", "0002_remove_alert_alert_id"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userprofile',
-            name='created_by_admin',
-            field=models.BooleanField(default=False, verbose_name='Criado por Administrador'),
+            model_name="userprofile",
+            name="created_by_admin",
+            field=models.BooleanField(
+                default=False, verbose_name="Criado por Administrador"
+            ),
         ),
     ]

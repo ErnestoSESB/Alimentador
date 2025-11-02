@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Feeder"
+version = "0.1.0"
+description = "Projeto para atividade com o toml"
+authors = [
+    { name = "Silvio Ernesto", email = "silvioebis2005@gmail.com" },
+    { name = "Erick Soares", email = "erick250107@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "asgiref==3.9.1",
+    "django==5.2.6",
+    "numpy==2.3.2",
+    "pyarrow==21.0.0",
+    "sqlparse==0.5.3",
+    "tzdata==2025.2"
+]
+
+[project.urls]
+Homepage = "https://github.com/ErnestoSESB/Feeder"
+Repository = "https://github.com/ErnestoSESB/Feeder"
+"Bug Tracker" = "https://github.com/ErnestoSESB/Feeder/issues"
+
+[project.optional-dependencies]
+dev = [
+    "black==24.3.0",   
+    "flake8==7.0.0",     
+    "isort==5.13.2",    
+    "pytest==8.2.0",     
+    "pytest-django==4.8.0"
+]
+test = [
+    "pytest==8.3.5",
+    "pytest-django==4.8.0",
+    "coverage==7.5.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["alimentador*"]
+
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "W503"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "alimentador.settings"
+python_files = ["tests.py", "test_*.py"]
