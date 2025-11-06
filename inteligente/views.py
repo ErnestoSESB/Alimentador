@@ -351,7 +351,7 @@ def user_detail(request, user_id, user_name=None):
     user_alerts_count = 0
     if feeders:
         user_alerts_count = Alert.objects.filter(
-            feeder_name__in=[f.name for f in feeders]
+            feeder_id__in=[f.id for f in feeders]
         ).count()
 
     context = {
