@@ -76,7 +76,7 @@ class feederForm(forms.ModelForm):
             ),
             "capacity": forms.NumberInput(attrs={"class": "form-control", "min": 1}),
             "daily_consumption": forms.NumberInput(
-                attrs={"class": "form-control", "min": 1}
+                attrs={"class": "form-control"}
             ),
             "last_maintenance": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}

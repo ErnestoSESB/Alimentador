@@ -31,7 +31,7 @@
             <select name="status">
                 <option value="">Todos os Status</option>
                 <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Ativo</option>
-                <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inativo</option>
+                <option value="inactive" {% if request.GET.status === 'inactive' %}selected{% endif %}>Inativo</option>
                 <option value="maintenance" {% if request.GET.status == 'maintenance' %}selected{% endif %}>Manutenção</option>
                 <option value="error" {% if request.GET.status == 'error' %}selected{% endif %}>Erro</option>
             </select>

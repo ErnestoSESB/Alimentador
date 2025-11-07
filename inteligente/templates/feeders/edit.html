@@ -86,17 +86,7 @@
                 </div>
             </div>
             
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="{{ form.food_level.id_for_label }}">{{ form.food_level.label }}:</label>
-                        {{ form.food_level }}
-                        {% if form.food_level.errors %}
-                            <div class="text-danger">{{ form.food_level.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+
             
             <div class="row">
                 <div class="col-md-4">
@@ -128,6 +118,18 @@
                     </div>
                 </div>
                 {% endif %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.food_level.id_for_label }}">{{ form.food_level.label }}:</label>
+                        {{ form.food_level }}
+                        {% if form.food_level.errors %}
+                            <div class="text-danger">{{ form.food_level.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
             
             {% if not is_farmer %}
