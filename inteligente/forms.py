@@ -192,12 +192,12 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name", "email"]
+        fields = ["first_name", "last_name", "email", "username"]
         labels = {
-            "username": "Nome de usuário",
             "first_name": "Nome",
             "last_name": "Sobrenome",
             "email": "E-mail",
+            "username": "Nome de usuário",
         }
 
     def clean_email(self):
