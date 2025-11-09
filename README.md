@@ -15,11 +15,11 @@ do alimentador.
 
 ## ⚙️ Funcionalidades
 
--   ✅ CRUD de agricultores cadastrados\
--   ✅ CRUD dos alimentadores (dispositivos físicos)\
--   ✅ CRUD das leituras e dados coletados\
--   ✅ Interface web simples e funcional\
--   ✅ Integração futura com o firmware do microcontrolador
+-   ✅ CRUD de agricultores cadastrados;
+-   ✅ CRUD dos alimentadores (dispositivos físicos);
+-   ✅ CRUD das leituras e dados coletados;
+-   ✅ Interface web simples e funcional;
+-   ✅ Integração futura com o firmware do microcontrolador;
 
 ------------------------------------------------------------------------
 
