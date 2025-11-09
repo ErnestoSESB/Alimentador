@@ -27,29 +27,29 @@ do alimentador.
 
 ### **Backend / Web**
 
--   Python\
--   Django\
--   SQLite\
--   HTML\
--   Bootstrap\
--   JavaScript (opcional para interações)
+-   Python;
+-   Django;
+-   SQLite;
+-   HTML;
+-   Bootstrap;
+-   JavaScript (opcional para interações);
 
 ### **Hardware / Firmware**
 
--   C++\
--   Sensor ultrassônico\
--   Servo motor\
--   Microcontrolador compatível
+-   C++;
+-   Sensor ultrassônico;
+-   Servo motor;
+-   Microcontrolador compatível;
 
 ------------------------------------------------------------------------
 
 ## 📦 Pré-requisitos
 
-Para rodar o projeto, instale:\
-- Python 3\
-- Django\
-- Git\
-- Ambiente de compilação para o firmware em C++ (caso queira integrar)
+Para rodar o projeto, instale:
+- Python 3;
+- Django;
+- Git;
+- Ambiente de compilação para o firmware em C++ (caso queira integrar);
 
 ------------------------------------------------------------------------
 
