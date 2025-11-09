@@ -110,5 +110,5 @@ Para rodar o projeto, instale:\
 
 ## 👥 Autores
 
--   **Silvio Ernesto da Silva Bisneto**\
+-   **Silvio Ernesto da Silva Bisneto**
 -   **José Eduardo Sarmento Silva**
