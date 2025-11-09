@@ -1,4 +1,4 @@
-# Alimentador
+# SmartFeeder Auto - Alimentador Inteligente Automático para seus animais
 
 Sistema de alimentação automático para animais, integrando hardware e
 software.
