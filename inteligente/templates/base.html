@@ -73,10 +73,6 @@
                 </div>
                 
                 <div class="header-right">
-                    <button class="notification-btn">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">{{ alerts_count|default:0 }}</span>
-                    </button>
                     
                     {% if user.is_authenticated %}
                     <div class="user-menu">
