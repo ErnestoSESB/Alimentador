@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<!-- Filters -->
+<!-- Filtros -->
 <div class="filters-section">
     <form method="get" class="filters-form">
         <div class="filter-group">
@@ -40,7 +40,7 @@
     </form>
 </div>
 
-<!-- Feeders Grid -->
+<!-- Lista de Alimentadores -->
 <div class="feeders-grid">
     {% for feeder in feeders %}
     <div class="feeder-card">
@@ -50,11 +50,11 @@
                 <div class="feeder-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>{{ feeder.location }}</span>
+                    <div class="feeder-status status-{{ feeder.status }}">
+                        <i class="fas fa-{% if feeder.status == 'active' %}play-circle{% elif feeder.status == 'maintenance' %}wrench{% elif feeder.status == 'error' %}exclamation-circle{% else %}pause-circle{% endif %}"></i>
+                        {% if feeder.status == 'active' %}Ativo{% elif feeder.status == 'maintenance' %}Manutenção{% elif feeder.status == 'error' %}Erro{% else %}Inativo{% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="feeder-status status-{{ feeder.status }}">
-                <i class="fas fa-{% if feeder.status == 'active' %}play-circle{% elif feeder.status == 'maintenance' %}wrench{% elif feeder.status == 'error' %}exclamation-circle{% else %}pause-circle{% endif %}"></i>
-                {% if feeder.status == 'active' %}Ativo{% elif feeder.status == 'maintenance' %}Manutenção{% elif feeder.status == 'error' %}Erro{% else %}Inativo{% endif %}
             </div>
         </div>
 
