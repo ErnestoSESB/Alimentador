@@ -107,6 +107,17 @@
                         {% endif %}
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.food_level.id_for_label }}">{{ form.food_level.label }}:</label>
+                            {{ form.food_level }}
+                            {% if form.food_level.errors %}
+                                <div class="text-danger">{{ form.food_level.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
                 {% if not is_farmer %}
                 <div class="col-md-4">
                     <div class="form-group">
@@ -116,35 +127,20 @@
                             <div class="text-danger">{{ form.last_maintenance.errors }}</div>
                         {% endif %}
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.next_maintenance.id_for_label }}">{{ form.next_maintenance.label }}:</label>
+                                {{ form.next_maintenance }}
+                                {% if form.next_maintenance.errors %}
+                                    <div class="text-danger">{{ form.next_maintenance.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 {% endif %}
             </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="{{ form.food_level.id_for_label }}">{{ form.food_level.label }}:</label>
-                        {{ form.food_level }}
-                        {% if form.food_level.errors %}
-                            <div class="text-danger">{{ form.food_level.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            
-            {% if not is_farmer %}
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="{{ form.next_maintenance.id_for_label }}">{{ form.next_maintenance.label }}:</label>
-                        {{ form.next_maintenance }}
-                        {% if form.next_maintenance.errors %}
-                            <div class="text-danger">{{ form.next_maintenance.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
             
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
