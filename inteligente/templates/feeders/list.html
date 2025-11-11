@@ -66,7 +66,7 @@
                         {{ feeder.food_level }}%
                     </div>
                 </div>
-                <div class="level-bar">
+                <div class="level-bar level-{% if feeder.food_level > 50 %}high{% elif feeder.food_level > 20 %}medium{% else %}low{% endif %}">
                     <div class="level-progress" style="width: {{ feeder.food_level }}%"></div>
                 </div>
             </div>
