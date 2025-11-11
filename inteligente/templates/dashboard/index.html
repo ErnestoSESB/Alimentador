@@ -72,52 +72,57 @@
     </div>
 </div>
 
-<div class="dashboard-grid">
+<div class="dashboard-section">
     <!-- Alertas Recentes -->
-    <div class="dashboard-section alerts-section">
-        <div class="section-header">
-            <h2>Alertas Recentes</h2>
+    <div class="dashboard-section alerts-section"
+    style="background: white; border-radius: 12px; padding: 20px; border: 1px solid #e5e7eb;">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+           <h2 style="margin: 0;">Alertas Recentes</h2>
             <a href="{% url 'alerts' %}" class="section-link">Ver todos</a>
         </div>
+
         <div class="alerts-list">
             {% for alert in recent_alerts %}
-        <div class="alert-item">
-            <h4>{{ alert.feeder_name }}</h4>
-            <p>{{ alert.message }}</p>
-            <span>{{ alert.created_at|date:"d/m/Y H:i" }}</span>
+            <div class="alert-item">
+                <h4>{{ alert.feeder_name }}</h4>
+                <p>{{ alert.message }}</p>
+                <span>{{ alert.created_at|date:"d/m/Y H:i" }}</span>
             </div>
             {% empty %}
-            <div class="empty-state">
-                <p>Nenhum alerta recente</p>
-            </div>
+                <p  style="text-align: center; margin: 40px 0;">
+                    Nenhum alerta recente
+                </p>
             {% endfor %}
         </div>
     </div>
+</div>
 
+<div class="dashboard-section" style="margin-top: 30px;">
     <!-- Satus dos limentadores Ativos -->
     <div class="dashboard-section feeders-section">
-    <h2>Status dos Alimentadores Ativos</h2>
-    <div class="feeders-status">
-        {% for feeder in active_feeders %}
-            <div class="feeder-status-item"
-            style="display: flex; justify-content: space-between; align-items: center;">
-                <div class="feeder-info" style="display: flex; flex-direction: column;">
-                    <h4 style="margin: 0;">{{ feeder.name }}</h4>
-                    <p style="margin: 0;">Estado: {% if feeder.status == 'active' %}Ativo{% else %}Inativo{% endif %}</p>
-                </div>
-                <div class="feeder-level">
-                    <div class="level-badge level-{% if feeder.food_level > 50 %}high{% elif feeder.food_level > 20 %}medium{% else %}low{% endif %}">
-                        {{ feeder.food_level }}%
+        <h2 style="margin: 0; padding-left: 20px;">Status dos Alimentadores Ativos</h2>
+        <div class="feeders-status">
+            {% for feeder in active_feeders %}
+                <div class="feeder-status-item"
+                style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="feeder-info" style="display: flex; flex-direction: column;">
+                        <h4 style="margin: 0;">{{ feeder.name }}</h4>
+                        <p style="margin: 0;">Estado: {% if feeder.status == 'active' %}Ativo{% else %}Inativo{% endif %}</p>
+                    </div>
+                    <div class="feeder-level">
+                        <div class="level-badge level-{% if feeder.food_level > 50 %}high{% elif feeder.food_level > 20 %}medium{% else %}low{% endif %}">
+                            {{ feeder.food_level }}%
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% empty %}
-            <div class="empty-state">
-                <i class="fas fa-cogs"></i>
-                <p>Nenhum alimentador ativo</p>
-            </div>
-        {% endfor %}
-    </div>
+            {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-cogs"></i>
+                    <p>Nenhum alimentador ativo</p>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
