@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<!-- Filters -->
+<!-- Filtros -->
 <div class="filters-section" style="display: flex; align-items: center; justify-content: space-between;">
     <form method="get" class="filters-form" style="display: flex; align-items: center; gap: 10px;">
         <div class="filter-group">
@@ -45,7 +45,7 @@
     </a>
 </div>
 
-<!-- Pending Alerts -->
+<!-- Alertas Pendentes -->
 {% if pending_alerts %}
 <div class="alerts-section pending-alerts">
     <div class="section-header alert-header">
@@ -98,7 +98,7 @@
 </div>
 {% endif %}
 
-<!-- Resolved Alerts -->
+<!-- Alertas Resolvidos -->
 {% if resolved_alerts %}
 <div class="alerts-section resolved-alerts">
     <div class="section-header alert-header">
@@ -128,7 +128,7 @@
 </div>
 {% endif %}
 
-<!-- Empty State -->
+<!-- Sem Alertas -->
 {% if not pending_alerts and not resolved_alerts %}
 <div class="empty-state-full">
     <div class="empty-icon">
