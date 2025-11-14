@@ -234,6 +234,11 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ["role", "phone", "address"]
+        labels = {
+            "role": "Função",
+            "phone": "Telefone",
+            "address": "Endereço",
+        }
 
 
 class FarmerProfileForm(forms.ModelForm):
@@ -246,17 +251,15 @@ class FarmerProfileForm(forms.ModelForm):
             "phone": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Telefone"}
             ),
-            "address": forms.Textarea(
+            "address": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "rows": 3,
                     "placeholder": "Endereço completo",
                 }
             ),
-            "custom_executive_summary": forms.Textarea(
+            "custom_executive_summary": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "rows": 6,
                     "placeholder": "Digite seu resumo executivo personalizado...",
                 }
             ),
