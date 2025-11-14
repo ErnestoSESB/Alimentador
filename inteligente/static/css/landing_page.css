@@ -790,6 +790,41 @@ html {
     transition: 0.5s;
 }
 
+.mail-icon {
+    width: 120px;
+    height: 90px;
+    border: 6px solid #000;
+    border-radius: 12px;
+    position: relative;
+    background: white;
+}
+
+.mail-icon::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 32px;
+    margin: auto;
+    width: 80%;
+    height: 6px;
+    background: #000;
+    transform: rotate(45deg);
+}
+
+.mail-icon::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 32px;
+    margin: auto;
+    width: 80%;
+    height: 6px;
+    background: #000;
+    transform: rotate(-45deg);
+}
+
 /* ===========================
    Utilities
    =========================== */
