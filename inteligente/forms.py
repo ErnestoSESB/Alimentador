@@ -193,11 +193,20 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["first_name", "last_name", "email", "username"]
+        widgets = {
+            "first_name": forms.TextInput(attrs={"placeholder": "Digite o primeiro nome do usuário"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Digite o sobrenome do usuário"}),
+            "email": forms.EmailInput(attrs={"placeholder": "Digite o email do usuário"}),
+            "username": forms.TextInput(attrs={"placeholder": "Digite o Username do usuário"}),
+        }
         labels = {
             "first_name": "Nome",
             "last_name": "Sobrenome",
             "email": "E-mail",
             "username": "Nome de usuário",
+        }
+        help_texts ={
+            "username": None
         }
 
     def clean_email(self):
