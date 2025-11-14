@@ -1,5 +1,5 @@
 /* ===========================
-   Landing Page Specific Styles
+   Estilos específicos para a Landing Page
    =========================== */
 
 /* Scoped reset apenas para a landing page */
@@ -23,7 +23,7 @@ html {
 }
 
 /* ===========================
-   Container & Layout (Landing Page)
+   Container e Layout da Landing Page
    =========================== */
 
 .landing-container {
@@ -39,7 +39,7 @@ html {
 }
 
 /* ===========================
-   Header & Navigation (Landing Page)
+   Header e Navegação da Landing Page
    =========================== */
 
 .landing-header {
@@ -190,7 +190,7 @@ html {
 }
 
 /* ===========================
-   Hero Section
+   Seção Hero
    =========================== */
 
 .hero {
@@ -315,7 +315,7 @@ html {
 }
 
 /* ===========================
-   Buttons (Landing Page)
+   Botões da Landing Page
    =========================== */
 
 .landing-btn {
@@ -370,7 +370,7 @@ html {
 }
 
 /* ===========================
-   Sections
+   Seções
    =========================== */
 
 .project,
@@ -431,7 +431,7 @@ html {
 }
 
 /* ===========================
-   Project Section
+   Seção do Projeto
    =========================== */
 
 .project-content {
@@ -493,7 +493,7 @@ html {
 }
 
 /* ===========================
-   Features Section
+   Seção de Funcionalidades
    =========================== */
 
 .features {
@@ -616,7 +616,7 @@ html {
 }
 
 /* ===========================
-   About Section
+   Seção Sobre Nós
    =========================== */
 
 .team-grid {
@@ -697,7 +697,7 @@ html {
 }
 
 /* ===========================
-   CTA Section
+   Seção do CTA
    =========================== */
 
 .cta {
@@ -790,43 +790,8 @@ html {
     transition: 0.5s;
 }
 
-.mail-icon {
-    width: 120px;
-    height: 90px;
-    border: 6px solid #000;
-    border-radius: 12px;
-    position: relative;
-    background: white;
-}
-
-.mail-icon::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 32px;
-    margin: auto;
-    width: 80%;
-    height: 6px;
-    background: #000;
-    transform: rotate(45deg);
-}
-
-.mail-icon::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 32px;
-    margin: auto;
-    width: 80%;
-    height: 6px;
-    background: #000;
-    transform: rotate(-45deg);
-}
-
 /* ===========================
-   Utilities
+   Utilitários
    =========================== */
 
 @media (max-width: 767px) {
