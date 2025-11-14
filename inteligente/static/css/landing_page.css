@@ -550,6 +550,7 @@ html {
     justify-content: center;
     margin-bottom: 1rem;
     color: white;
+    padding: 12px;
 }
 
 .feature-title {
@@ -562,6 +563,12 @@ html {
 .feature-description {
     color: #d1d5db;
     line-height: 1.6;
+}
+
+.feature-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .benefits {
