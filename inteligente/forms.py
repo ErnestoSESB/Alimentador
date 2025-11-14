@@ -249,12 +249,12 @@ class FarmerProfileForm(forms.ModelForm):
         fields = ["phone", "address", "custom_executive_summary"]
         widgets = {
             "phone": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Telefone"}
+                attrs={"class": "form-control", "placeholder": "Digite seu número de telefone"}
             ),
             "address": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Endereço completo",
+                    "placeholder": "Digite seu endereço completo",
                 }
             ),
             "custom_executive_summary": forms.TextInput(
