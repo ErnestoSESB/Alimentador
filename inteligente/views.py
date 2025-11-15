@@ -3,12 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, Avg
+from django.db.models import Q, Avg, Sum
 from django.contrib.auth.models import Group
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.utils import timezone
-from .models import Feeder, Alert, User, UserProfile
+from .models import Feeder, Alert, User, UserProfile, MonthlyConsumption
 from .forms import feederForm, FarmerFeederForm, alertForm, FarmerAlertForm, Feeder, User, UserForm, UserProfile, UserProfileForm, FarmerProfileForm
 import re
 
@@ -640,19 +640,32 @@ def reports_index(request):
     # Calcular métricas baseadas nos dados disponíveis
     total_feeders = feeders.count()
     total_alerts = alerts.count()
-    
+
+    # Validação: se agricultor não tem alimentadores, mostrar mensagem de erro
+    if is_farmer and total_feeders == 0:
+        context = {
+            "context_message": "Nenhum relatório pode ser gerado devido à falta de alimentadores. Por favor, cadastre um alimentador para visualizar relatórios.",
+            "is_farmer": is_farmer,
+            "report_data": {},
+            "top_feeders": [],
+            "consumption_series": [],
+            "consumption_max": 0,
+        }
+        return render(request, "reports/index.html", context)
+
     if total_feeders > 0:
         base_efficiency = 95 if is_farmer else 92
         efficiency_penalty = min(total_alerts * 2, 15)
         feeding_efficiency = max(base_efficiency - efficiency_penalty, 75)
-        
-        consumption_per_feeder = 320 if is_farmer else 280
-        total_consumption = total_feeders * consumption_per_feeder
-        
+
+        # total_consumption will be calculated from MonthlyConsumption last 6 months when available
+        total_consumption = 0
+
         from django.db.models import Avg
-        avg_level_result = feeders.aggregate(Avg('food_level'))
-        average_level = round(avg_level_result['food_level__avg'] or 0)
-        
+
+        avg_level_result = feeders.aggregate(Avg("food_level"))
+        average_level = round(avg_level_result["food_level__avg"] or 0)
+
         system_uptime = 99.5 if total_alerts < 3 else 98.2 if total_alerts < 8 else 96.8
         maintenance_completed = max(1, total_feeders // 2)
     else:
@@ -663,47 +676,105 @@ def reports_index(request):
         maintenance_completed = 0
 
     report_data = {
-        'feeding_efficiency': feeding_efficiency,
-        'total_consumption': total_consumption,
-        'average_level': average_level,
-        'system_uptime': system_uptime,
-        'maintenance_completed': maintenance_completed,
-        'alerts_generated': total_alerts,
-        'total_feeders': total_feeders,
-        'scope_label': scope_label,
-        'is_farmer': is_farmer,
+        "feeding_efficiency": feeding_efficiency,
+        "total_consumption": total_consumption,
+        "average_level": average_level,
+        "system_uptime": system_uptime,
+        "maintenance_completed": maintenance_completed,
+        "alerts_generated": total_alerts,
+        "total_feeders": total_feeders,
+        "scope_label": scope_label,
+        "is_farmer": is_farmer,
     }
-    
+
+    # Build last-6-months labels and consumption series (oldest -> newest)
+    from datetime import date, timedelta
+    import calendar
+
+    today = date.today()
+    months = []
+    # compute months list as tuples (year, month) for last 6 months
+    for i in range(5, -1, -1):
+        # find the year/month i months ago
+        # compute a reference month by shifting back i months from current month
+        month_index = today.month - i - 1
+        year = today.year + (month_index // 12)
+        month = (month_index % 12) + 1
+        months.append((year, month))
+
+    # Aggregate MonthlyConsumption for feeders in scope
+    mc_qs = MonthlyConsumption.objects.filter(feeder__in=feeders).values(
+        "year", "month"
+    ).annotate(total_kg=Sum("kg_consumed"))
+
+    mc_lookup = {(r["year"], r["month"]): float(r["total_kg"] or 0.0) for r in mc_qs}
+
+    consumption_series = []
+    series_total = 0.0
+    for (y, m) in months:
+        kg = round(mc_lookup.get((y, m), 0.0), 2)
+        series_total += kg
+        label = calendar.month_abbr[m]
+        # kg para tonelada
+        tonnes = round(kg / 1000, 2)
+        consumption_series.append({"year": y, "month": m, "label": label, "kg": kg, "tonnes": tonnes})
+
+    # consumo dos meses
+    total_consumption_kg = round(series_total, 2)
+    total_consumption_tonnes = round(series_total / 1000, 2)
+    report_data["total_consumption"] = total_consumption_tonnes
+
+    max_kg = max((s["kg"] for s in consumption_series), default=0.0)
+
+    # adicionando ao contexto
+
     top_feeders = []
-    for i, feeder in enumerate(feeders.order_by('name')[:5]):
-        base_consumption = 250 + (i * 50)
-        feeder_alerts = alerts.filter(feeder=feeder).count()
-        feeder_efficiency = max(95 - (feeder_alerts * 3), 80)
+    for feeder in feeders.order_by("name")[:5]:
+        # Get total consumption from MonthlyConsumption for this feeder (last 6 months)
+        feeder_consumption_kg = MonthlyConsumption.objects.filter(
+            feeder=feeder, year__in=[y for y, m in months], month__in=[m for y, m in months]
+        ).aggregate(total=Sum("kg_consumed"))["total"] or 0.0
         
-        top_feeders.append({
-            'name': feeder.name,
-            'consumption': base_consumption,
-            'efficiency': feeder_efficiency,
-            'alerts_count': feeder_alerts,
-        })
-    
+        feeder_consumption_tonnes = round(feeder_consumption_kg / 1000, 2)
+        
+        feeder_alerts = alerts.filter(feeder=feeder).count()
+        
+        # Efficiency: based on consumption consistency and alert count
+        # Higher consumption = more active, fewer alerts = better efficiency
+        base_efficiency = 85
+        alert_penalty = min(feeder_alerts * 3, 20)
+        feeder_efficiency = max(base_efficiency - alert_penalty, 60)
+
+        top_feeders.append(
+            {
+                "name": feeder.name,
+                "consumption": feeder_consumption_tonnes,
+                "efficiency": feeder_efficiency,
+                "alerts_count": feeder_alerts,
+            }
+        )
+
     if not top_feeders and is_farmer:
         context_message = "Você ainda não possui alimentadores cadastrados."
     elif not top_feeders:
         context_message = "Nenhum alimentador cadastrado no sistema."
     else:
         context_message = None
-    
+
     context = {
-        'report_data': report_data,
-        'top_feeders': top_feeders,
-        'context_message': context_message,
-        'is_farmer': is_farmer,
-        'created_by_admin': user_profile.created_by_admin if user_profile else False,
-        'custom_executive_summary': user_profile.custom_executive_summary if user_profile else None,
+        "report_data": report_data,
+        "top_feeders": top_feeders,
+        "context_message": context_message,
+        "is_farmer": is_farmer,
+        "consumption_series": consumption_series,
+        "consumption_max": max_kg,
+        "created_by_admin": user_profile.created_by_admin if user_profile else False,
+        "custom_executive_summary": (
+            user_profile.custom_executive_summary if user_profile else None
+        ),
     }
-    
-    return render(request, 'reports/index.html', context)
+
+    return render(request, "reports/index.html", context)
 
 @login_required
 def dashboard(request):

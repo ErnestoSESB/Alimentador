@@ -224,3 +224,18 @@ class FeedingLog(models.Model):
     
     def __str__(self):
         return f"{self.feeder.name} - {self.timestamp.strftime('%d/%m/%Y %H:%M')}"
+
+
+class MonthlyConsumption(models.Model):
+    """Stores simulated monthly consumption (kg) for each feeder."""
+    feeder = models.ForeignKey(Feeder, on_delete=models.CASCADE, related_name='monthly_consumptions')
+    year = models.IntegerField()
+    month = models.IntegerField()
+    kg_consumed = models.FloatField(default=0.0)
+
+    class Meta:
+        unique_together = (('feeder', 'year', 'month'),)
+        ordering = ['-year', '-month']
+
+    def __str__(self):
+        return f"{self.feeder.name} - {self.month}/{self.year}: {self.kg_consumed}kg"

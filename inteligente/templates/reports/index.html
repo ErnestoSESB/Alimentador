@@ -70,7 +70,7 @@
                 <i class="fas fa-chart-bar"></i>
             </div>
             <div class="metric-info">
-                <h3>{{ report_data.total_consumption }}kg</h3>
+                <h3>{{ report_data.total_consumption }}t</h3>
                 <p>Consumo Total{% if is_farmer %} - Seus Alimentadores{% endif %}</p>
                 <span class="metric-trend positive">Baseado em {{ report_data.total_feeders }} alimentador{{ report_data.total_feeders|pluralize:"es" }}</span>
             </div>
@@ -100,41 +100,36 @@
 <!-- Consumption Chart -->
 <div class="chart-section">
     <div class="chart-header">
-        <h2>Consumo Mensal (kg){% if is_farmer %} - Seus Alimentadores{% endif %}</h2>
+        <h2>Consumo Mensal (t) - Últimos 6 Meses{% if is_farmer %} - Seus Alimentadores{% endif %}</h2>
         <div class="chart-period">
             <i class="fas fa-calendar"></i>
-            <span>Jan - Jun 2024</span>
+            <span>
+                {% if consumption_series %}
+                    {% with first=consumption_series.0 last=consumption_series|last %}
+                    {{ first.label }} {{ first.year }} - {{ last.label }} {{ last.year }}
+                    {% endwith %}
+                {% else %}
+                    Sem dados disponíveis
+                {% endif %}
+            </span>
         </div>
     </div>
     <div class="chart-container">
         <div class="chart-bars">
-            <!-- Valores simulados baseados no consumo total -->
-            {% with base_consumption=report_data.total_consumption %}
-            <div class="chart-bar" data-value="{{ base_consumption|add:'-100' }}" style="height: 75%">
-                <div class="bar-value">{{ base_consumption|add:'-100' }}</div>
-                <div class="bar-label">Jan</div>
-            </div>
-            <div class="chart-bar" data-value="{{ base_consumption|add:'-50' }}" style="height: 85%">
-                <div class="bar-value">{{ base_consumption|add:'-50' }}</div>
-                <div class="bar-label">Fev</div>
-            </div>
-            <div class="chart-bar" data-value="{{ base_consumption|add:'50' }}" style="height: 92%">
-                <div class="bar-value">{{ base_consumption|add:'50' }}</div>
-                <div class="bar-label">Mar</div>
-            </div>
-            <div class="chart-bar" data-value="{{ base_consumption|add:'-25' }}" style="height: 88%">
-                <div class="bar-value">{{ base_consumption|add:'-25' }}</div>
-                <div class="bar-label">Abr</div>
-            </div>
-            <div class="chart-bar" data-value="{{ base_consumption }}" style="height: 96%">
-                <div class="bar-value">{{ base_consumption }}</div>
-                <div class="bar-label">Mai</div>
-            </div>
-            <div class="chart-bar" data-value="{{ base_consumption|add:'-75' }}" style="height: 90%">
-                <div class="bar-value">{{ base_consumption|add:'-75' }}</div>
-                <div class="bar-label">Jun</div>
-            </div>
-            {% endwith %}
+            {% if consumption_series %}
+                {% for month_data in consumption_series %}
+                {% widthratio month_data.kg consumption_max 100 as bar_height %}
+                <div class="chart-bar" data-value="{{ month_data.tonnes }}" style="height: {% if consumption_max > 0 %}{{ bar_height }}%{% else %}0%{% endif %}">
+                    <div class="bar-value">{{ month_data.tonnes }}t</div>
+                    <div class="bar-label">{{ month_data.label }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #999;">
+                    <i class="fas fa-chart-bar" style="font-size: 2em; margin-bottom: 10px;"></i>
+                    <p>Nenhum dado de consumo disponível para os últimos 6 meses.</p>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -173,7 +168,7 @@
             <div class="feeder-performance">
                 <div class="feeder-info">
                     <h4>{{ feeder.name }}</h4>
-                    <span class="consumption">{{ feeder.consumption }}kg</span>
+                    <span class="consumption">{{ feeder.consumption }}t</span>
                     <small class="text-muted">{{ feeder.alerts_count }} alerta{{ feeder.alerts_count|pluralize:"s" }}</small>
                 </div>
                 <div class="efficiency-bar">
@@ -227,10 +222,10 @@
             <p>
                 {% if is_farmer %}
                 Durante o período analisado, seus {{ report_data.total_feeders }} alimentador{{ report_data.total_feeders|pluralize:"es" }} 
-                apresentaram {{ report_data.feeding_efficiency }}% de eficiência de alimentação. O consumo total foi de {{ report_data.total_consumption }}kg.
+                apresentaram {{ report_data.feeding_efficiency }}% de eficiência de alimentação. O consumo total foi de {{ report_data.total_consumption }}t.
                 {% else %}
                 Durante o período analisado, o sistema com {{ report_data.total_feeders }} alimentadores apresentou 
-                {{ report_data.feeding_efficiency }}% de eficiência geral. O consumo total de ração foi de {{ report_data.total_consumption }}kg.
+                {{ report_data.feeding_efficiency }}% de eficiência geral. O consumo total de ração foi de {{ report_data.total_consumption }}t.
                 {% endif %}
             </p>
             <p>
