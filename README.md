@@ -1,44 +1,114 @@
-Este projeto visa apresentar de forma visual um projeto desenvolvido por meio de código livre - a implementação de um sistema de alimentação automático para animais. Este software foi desenvolvido em C++ e faz a utilização de um sonar, um servo-motor e outros periféricos, já a linguagem utilizada na parte web é python.
+# SmartFeeder Auto
 
-DESENVOLVEDORES: Silvio Ernesto da Silva Bisneto, José Eduardo Sarmento Silva
+Sistema de alimentação automático para animais, integrando hardware e
+software.
 
-Recursos ultilizados:
+## 📌 Visão Geral
 
-Django 4.2.2
+Este projeto apresenta o desenvolvimento de um sistema de alimentação
+automática para animais, combinando **microcontrolador (C++)**,
+**backend Django (Python)** e **interface web**.\
+O objetivo é permitir controle, monitoramento e registro das atividades
+do alimentador.
 
-Python 3.0
+------------------------------------------------------------------------
 
-SQlite
+## ⚙️ Funcionalidades
 
-HTML/CSS/Bootstrap
+-   ✅ CRUD de agricultores cadastrados;
+-   ✅ CRUD dos alimentadores (dispositivos físicos);
+-   ✅ CRUD das leituras e dados coletados;
+-   ✅ Interface web simples e funcional;
+-   ✅ Integração futura com o firmware do microcontrolador;
 
-Funcionalidades:
+------------------------------------------------------------------------
 
-- CRUD de agricultores interessados
+## 🧰 Tecnologias Utilizadas
 
+### **Backend / Web**
 
-- CRUD de dados coletados do alimentador
+-   Python;
+-   Django;
+-   SQLite;
+-   HTML;
+-   Bootstrap;
+-   JavaScript (opcional para interações);
 
+### **Hardware / Firmware**
 
-- CRUD de dados sobre o alimentador
-Pré-requisitos:
+-   C++;
+-   Sensor ultrassônico;
+-   Servo motor;
+-   Microcontrolador compatível;
 
-Faça a instalação do Python em seu sistema operacional através de: https://www.python.org/downloads/
+------------------------------------------------------------------------
 
-Faça a instalação do Django em seu sistema operacional através de: https://www.djangoproject.com/download/
+## 📦 Pré-requisitos
 
-Instruções de Execução:
+Para rodar o projeto, instale:
+- Python 3;
+- Django;
+- Git;
+- Ambiente de compilação para o firmware em C++ (caso queira integrar);
 
-Clone o repositório com o comando: git clone https://github.com/ErnestoSESB/Intelligent_feeder.git
+------------------------------------------------------------------------
 
-Instale o ambiente virtual: python -m venv venv .
+## 🚀 Instalação e Execução
 
-Rode o ambiente virtual: .\Venv\Scripts\activate
+1.  Clone o repositório:
 
-Instale as dependências com o comando: pip install -r requeriments.txt
+    ``` bash
+    git clone https://github.com/ErnestoSESB/Alimentador.git
+    cd Alimentador
+    ```
 
-Crie um superusuario: python manage.py createsuperuser
+2.  Crie e ative um ambiente virtual (opcional, mas recomendado):
 
-Rode o servidor com o comando python manage.py runserver
+    ``` bash
+    python -m venv venv
+    source venv/bin/activate      # Linux/Mac
+    .\venv\Scripts\activate       # Windows
+    ```
 
-Acesse o sistema em http://localhost:8000
+3.  Instale as dependências:
+
+    ``` bash
+    pip install -r requirements.txt
+    ```
+
+4.  Crie um superusuário para acessar o admin:
+
+    ``` bash
+    python manage.py createsuperuser
+    ```
+
+5.  Execute o servidor:
+
+    ``` bash
+    python manage.py runserver
+    ```
+
+6.  Acesse no navegador:
+
+        http://localhost:8000/
+
+------------------------------------------------------------------------
+
+## 🗂 Estrutura do Projeto
+
+    Alimentador/
+    ├── agricultor/      # Gerenciamento dos agricultores
+    ├── alimentador/     # App principal Django
+    ├── inteligente/     # Lógica futura e integrações avançadas
+    ├── templates/       # Templates HTML organizados
+    ├── static/          # Arquivos CSS, JS, imagens
+    ├── manage.py
+    ├── requirements.txt
+    └── pyproject.toml   # Configurações do projeto
+
+------------------------------------------------------------------------
+
+## 👥 Autores
+
+-   **Silvio Ernesto da Silva Bisneto**
+-   **José Eduardo Sarmento Silva**

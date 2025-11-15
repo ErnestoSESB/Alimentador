@@ -73,10 +73,6 @@
                 </div>
                 
                 <div class="header-right">
-                    <button class="notification-btn">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">{{ alerts_count|default:0 }}</span>
-                    </button>
                     
                     {% if user.is_authenticated %}
                     <div class="user-menu">
@@ -105,9 +101,9 @@
                 </div>
             </header>
 
-            <!-- Page Content -->
+            <!-- Conteúdo da página -->
             <main class="page-content">
-                <!-- Global Messages -->
+                <!-- Alertas gerais -->
                 {% if messages %}
                     <div class="messages-container">
                         {% for message in messages %}
@@ -126,7 +122,7 @@
         </div>
     </div>
 
-    <!-- Overlay for mobile -->
+    <!-- Overlay para o mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <script src="{% load static %}{% static 'js/main.js' %}"></script>

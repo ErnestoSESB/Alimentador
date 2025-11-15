@@ -1,5 +1,5 @@
 /* ===========================
-   Landing Page Specific Styles
+   Estilos específicos para a Landing Page
    =========================== */
 
 /* Scoped reset apenas para a landing page */
@@ -23,7 +23,7 @@ html {
 }
 
 /* ===========================
-   Container & Layout (Landing Page)
+   Container e Layout da Landing Page
    =========================== */
 
 .landing-container {
@@ -39,7 +39,7 @@ html {
 }
 
 /* ===========================
-   Header & Navigation (Landing Page)
+   Header e Navegação da Landing Page
    =========================== */
 
 .landing-header {
@@ -190,7 +190,7 @@ html {
 }
 
 /* ===========================
-   Hero Section
+   Seção Hero
    =========================== */
 
 .hero {
@@ -315,7 +315,7 @@ html {
 }
 
 /* ===========================
-   Buttons (Landing Page)
+   Botões da Landing Page
    =========================== */
 
 .landing-btn {
@@ -370,7 +370,7 @@ html {
 }
 
 /* ===========================
-   Sections
+   Seções
    =========================== */
 
 .project,
@@ -431,7 +431,7 @@ html {
 }
 
 /* ===========================
-   Project Section
+   Seção do Projeto
    =========================== */
 
 .project-content {
@@ -493,7 +493,7 @@ html {
 }
 
 /* ===========================
-   Features Section
+   Seção de Funcionalidades
    =========================== */
 
 .features {
@@ -550,6 +550,7 @@ html {
     justify-content: center;
     margin-bottom: 1rem;
     color: white;
+    padding: 12px;
 }
 
 .feature-title {
@@ -562,6 +563,12 @@ html {
 .feature-description {
     color: #d1d5db;
     line-height: 1.6;
+}
+
+.feature-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .benefits {
@@ -609,7 +616,7 @@ html {
 }
 
 /* ===========================
-   About Section
+   Seção Sobre Nós
    =========================== */
 
 .team-grid {
@@ -690,7 +697,7 @@ html {
 }
 
 /* ===========================
-   CTA Section
+   Seção do CTA
    =========================== */
 
 .cta {
@@ -759,8 +766,32 @@ html {
     margin-top: 0.5rem;
 }
 
+.social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    font-size: 28px;
+}
+
+.social a {
+    color: #2D1F28;
+    text-decoration: none;
+    margin: 10px;
+}
+
+.social:hover a {
+    opacity: 0.3;
+    transition: 0.5s;
+}
+
+.social:hover a:hover {
+    opacity: 1;
+    transition: 0.5s;
+}
+
 /* ===========================
-   Utilities
+   Utilitários
    =========================== */
 
 @media (max-width: 767px) {

@@ -62,13 +62,13 @@ class feederForm(forms.ModelForm):
         ]
         widgets = {
             "name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Nome do alimentador"}
+                attrs={"class": "form-control", "placeholder": "Digite o nome do alimentador"}
             ),
             "location": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Localização"}
+                attrs={"class": "form-control", "placeholder": "Digite a localização do alimentador"}
             ),
             "owner": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Nome do proprietário"}
+                attrs={"class": "form-control", "placeholder": "Digite o nome do proprietário"}
             ),
             "status": forms.Select(attrs={"class": "form-control"}),
             "food_level": forms.NumberInput(
@@ -76,7 +76,7 @@ class feederForm(forms.ModelForm):
             ),
             "capacity": forms.NumberInput(attrs={"class": "form-control", "min": 1}),
             "daily_consumption": forms.NumberInput(
-                attrs={"class": "form-control", "min": 1}
+                attrs={"class": "form-control"}
             ),
             "last_maintenance": forms.DateInput(
                 attrs={"class": "form-control", "type": "date"}
@@ -102,10 +102,10 @@ class FarmerFeederForm(forms.ModelForm):
         ]
         widgets = {
             "name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Nome do alimentador"}
+                attrs={"class": "form-control", "placeholder": "Digite o nome do alimentador"}
             ),
             "location": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Localização"}
+                attrs={"class": "form-control", "placeholder": "Digite a localização do alimentador"}
             ),
             "status": forms.Select(attrs={"class": "form-control"}),
             "food_level": forms.NumberInput(
@@ -137,7 +137,7 @@ class alertForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "rows": 3,
-                    "placeholder": "Digite a descrição do alerta...",
+                    "placeholder": "Digite a descrição do alerta",
                 }
             ),
             "severity": forms.Select(attrs={"class": "form-control"}),
@@ -163,7 +163,7 @@ class FarmerAlertForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "rows": 3,
-                    "placeholder": "Digite a descrição do alerta...",
+                    "placeholder": "Digite a descrição do alerta",
                 }
             ),
             "severity": forms.Select(attrs={"class": "form-control"}),
@@ -192,12 +192,21 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name", "email"]
+        fields = ["first_name", "last_name", "email", "username"]
+        widgets = {
+            "first_name": forms.TextInput(attrs={"placeholder": "Digite o primeiro nome do usuário"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Digite o sobrenome do usuário"}),
+            "email": forms.EmailInput(attrs={"placeholder": "Digite o email do usuário"}),
+            "username": forms.TextInput(attrs={"placeholder": "Digite o Username do usuário"}),
+        }
         labels = {
-            "username": "Nome de usuário",
             "first_name": "Nome",
             "last_name": "Sobrenome",
             "email": "E-mail",
+            "username": "Nome de usuário",
+        }
+        help_texts ={
+            "username": None
         }
 
     def clean_email(self):
@@ -234,6 +243,22 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ["role", "phone", "address"]
+        labels = {
+            "role": "Função",
+            "phone": "Telefone",
+            "address": "Endereço",
+        }
+        widgets = {
+            "phone": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Digite o número de telefone do usuário"}
+            ),
+            "address": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Digite o endereço do usuário",
+                }
+            ),
+        }
 
 
 class FarmerProfileForm(forms.ModelForm):
@@ -244,20 +269,18 @@ class FarmerProfileForm(forms.ModelForm):
         fields = ["phone", "address", "custom_executive_summary"]
         widgets = {
             "phone": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Telefone"}
+                attrs={"class": "form-control", "placeholder": "Digite seu número de telefone"}
             ),
-            "address": forms.Textarea(
+            "address": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "rows": 3,
-                    "placeholder": "Endereço completo",
+                    "placeholder": "Digite seu endereço completo",
                 }
             ),
-            "custom_executive_summary": forms.Textarea(
+            "custom_executive_summary": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "rows": 6,
-                    "placeholder": "Digite seu resumo executivo personalizado...",
+                    "placeholder": "Digite seu resumo executivo personalizado",
                 }
             ),
         }

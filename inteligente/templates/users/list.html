@@ -6,7 +6,7 @@
 {% block content %}
 <div class="page-header">
     <div class="page-title">
-        <h1>Usuários</h1>
+        <h1>Página de Usuários</h1>
         <p>Gerencie os usuários do sistema</p>
     </div>
     <div class="page-actions">
@@ -17,7 +17,7 @@
     </div>
 </div>
 
-<!-- Filters -->
+<!-- Filtros -->
 <div class="filters-section">
     <form method="get" class="filters-form">
         <div class="filter-group">
@@ -39,10 +39,10 @@
     </form>
 </div>
 
-<!-- Users List -->
+<!-- Lista de Usuários -->
 <div class="users-section">
     <div class="section-header">
-        <h2>{{ users.count }} usuário{{ users.count|pluralize }} encontrado{{ users.count|pluralize }}</h2>
+        <h2>{{ users.paginator.count }} usuário{{ users.paginator.count|pluralize }} encontrado{{ users.paginator.count|pluralize }}</h2>
     </div>
     
     <div class="users-list">
@@ -115,7 +115,7 @@
     </div>
 </div>
 
-<!-- Pagination -->
+<!-- Paginação -->
 {% if is_paginated %}
 <div class="pagination-wrapper">
     <div class="pagination">

@@ -89,15 +89,6 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="{{ form.food_level.id_for_label }}">{{ form.food_level.label }}:</label>
-                        {{ form.food_level }}
-                        {% if form.food_level.errors %}
-                            <div class="text-danger">{{ form.food_level.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
                         <label for="{{ form.capacity.id_for_label }}">{{ form.capacity.label }}:</label>
                         {{ form.capacity }}
                         {% if form.capacity.errors %}
@@ -111,6 +102,15 @@
                         {{ form.daily_consumption }}
                         {% if form.daily_consumption.errors %}
                             <div class="text-danger">{{ form.daily_consumption.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="{{ form.food_level.id_for_label }}">{{ form.food_level.label }}:</label>
+                        {{ form.food_level }}
+                        {% if form.food_level.errors %}
+                            <div class="text-danger">{{ form.food_level.errors }}</div>
                         {% endif %}
                     </div>
                 </div>
