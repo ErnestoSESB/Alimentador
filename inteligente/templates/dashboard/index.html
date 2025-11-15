@@ -106,7 +106,8 @@
             {% for feeder in active_feeders %}
                 <div class="feeder-status-item"
                 style="display: flex; justify-content: space-between; align-items: center;">
-                    <div class="feeder-info" style="display: flex; flex-direction: column;">
+                    <div class="feeder-info" style="display: flex; flex-direction: column;
+                    align-items: flex-start; gap: 4px;">
                         <h4 style="margin: 0;">{{ feeder.name }}</h4>
                         <p style="margin: 0;">Proprietário: {{ feeder.owner }}</p>
                     </div>
