@@ -1,9 +1,5 @@
 Django == 5.2.6
 asgiref == 3.9.1
 pylance == 0.35.0
-<<<<<<< HEAD
 pyarrow == 22.0.0
 simpy == 4.0.1
-=======
-pyarrow == 22.0.0
->>>>>>> 5ba74b20f4847a6fad74175b1bd7f386c57afc35
