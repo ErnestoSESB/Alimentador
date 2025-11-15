@@ -17,162 +17,502 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Agricultor',
+            name="Agricultor",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('farm_name', models.CharField(blank=True, max_length=60)),
-                ('city', models.CharField(blank=True, max_length=60)),
-                ('age', models.IntegerField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("farm_name", models.CharField(blank=True, max_length=60)),
+                ("city", models.CharField(blank=True, max_length=60)),
+                ("age", models.IntegerField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Feeder',
+            name="Feeder",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Nome')),
-                ('location', models.CharField(max_length=200, verbose_name='Localização')),
-                ('status', models.CharField(choices=[('active', 'Ativo'), ('inactive', 'Inativo'), ('maintenance', 'Manutenção'), ('error', 'Erro')], default='inactive', max_length=20, verbose_name='Status')),
-                ('food_level', models.IntegerField(default=0, verbose_name='Nível de Ração (%)')),
-                ('last_maintenance', models.DateField(default=django.utils.timezone.now, verbose_name='Última Manutenção')),
-                ('owner', models.CharField(max_length=100, verbose_name='Proprietário')),
-                ('capacity', models.IntegerField(default=500, verbose_name='Capacidade (kg)')),
-                ('daily_consumption', models.IntegerField(default=25, verbose_name='Consumo Diário (kg)')),
-                ('next_feeding_time', models.DateTimeField(default=django.utils.timezone.now, verbose_name='Próxima Alimentação')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('next_maintenance', models.DateField(blank=True, null=True, verbose_name='Próxima Manutenção')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, verbose_name="Nome")),
+                (
+                    "location",
+                    models.CharField(max_length=200, verbose_name="Localização"),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("active", "Ativo"),
+                            ("inactive", "Inativo"),
+                            ("maintenance", "Manutenção"),
+                            ("error", "Erro"),
+                        ],
+                        default="inactive",
+                        max_length=20,
+                        verbose_name="Status",
+                    ),
+                ),
+                (
+                    "food_level",
+                    models.IntegerField(default=0, verbose_name="Nível de Ração (%)"),
+                ),
+                (
+                    "last_maintenance",
+                    models.DateField(
+                        default=django.utils.timezone.now,
+                        verbose_name="Última Manutenção",
+                    ),
+                ),
+                (
+                    "owner",
+                    models.CharField(max_length=100, verbose_name="Proprietário"),
+                ),
+                (
+                    "capacity",
+                    models.IntegerField(default=500, verbose_name="Capacidade (kg)"),
+                ),
+                (
+                    "daily_consumption",
+                    models.IntegerField(default=25, verbose_name="Consumo Diário (kg)"),
+                ),
+                (
+                    "next_feeding_time",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now,
+                        verbose_name="Próxima Alimentação",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "next_maintenance",
+                    models.DateField(
+                        blank=True, null=True, verbose_name="Próxima Manutenção"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Alimentador',
-                'verbose_name_plural': 'Alimentadores',
-                'ordering': ['-created_at'],
+                "verbose_name": "Alimentador",
+                "verbose_name_plural": "Alimentadores",
+                "ordering": ["-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='Usuario',
+            name="Usuario",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=60)),
-                ('category', models.CharField(choices=[('ADMIN', 'Administrador'), ('AGRIC', 'Agricultor'), ('VISIT', 'Visitante')], max_length=6)),
-                ('phone', models.CharField(blank=True, max_length=20)),
-                ('active', models.BooleanField(default=True)),
-                ('registration_date', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=60)),
+                (
+                    "category",
+                    models.CharField(
+                        choices=[
+                            ("ADMIN", "Administrador"),
+                            ("AGRIC", "Agricultor"),
+                            ("VISIT", "Visitante"),
+                        ],
+                        max_length=6,
+                    ),
+                ),
+                ("phone", models.CharField(blank=True, max_length=20)),
+                ("active", models.BooleanField(default=True)),
+                ("registration_date", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Visitante',
+            name="Visitante",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=50)),
-                ('email', models.EmailField(blank=True, max_length=254)),
-                ('registration_date', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=50)),
+                ("email", models.EmailField(blank=True, max_length=254)),
+                ("registration_date", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Alimentador',
+            name="Alimentador",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('model', models.CharField(max_length=50)),
-                ('capacity', models.DecimalField(decimal_places=2, help_text='Maximum capacity in kg', max_digits=6)),
-                ('feed_level', models.DecimalField(decimal_places=2, help_text='Current feed level in kg', max_digits=6)),
-                ('last_maintenance_date', models.DateField()),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='feeders', to='inteligente.agricultor')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("model", models.CharField(max_length=50)),
+                (
+                    "capacity",
+                    models.DecimalField(
+                        decimal_places=2,
+                        help_text="Maximum capacity in kg",
+                        max_digits=6,
+                    ),
+                ),
+                (
+                    "feed_level",
+                    models.DecimalField(
+                        decimal_places=2,
+                        help_text="Current feed level in kg",
+                        max_digits=6,
+                    ),
+                ),
+                ("last_maintenance_date", models.DateField()),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="feeders",
+                        to="inteligente.agricultor",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Alimento',
+            name="Alimento",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('quantity', models.DecimalField(decimal_places=2, max_digits=6)),
-                ('added_date', models.DateTimeField(auto_now_add=True)),
-                ('feeder', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='feeds', to='inteligente.alimentador')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
+                ("quantity", models.DecimalField(decimal_places=2, max_digits=6)),
+                ("added_date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "feeder",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="feeds",
+                        to="inteligente.alimentador",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Animal',
+            name="Animal",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(max_length=30)),
-                ('size', models.CharField(choices=[('small', 'Pequeno'), ('medium', 'Medio'), ('large', 'Grande')], max_length=20)),
-                ('feed_value', models.IntegerField()),
-                ('farmer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='animals', to='inteligente.agricultor')),
-                ('foods', models.ManyToManyField(related_name='animals', to='inteligente.alimento')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("type", models.CharField(max_length=30)),
+                (
+                    "size",
+                    models.CharField(
+                        choices=[
+                            ("small", "Pequeno"),
+                            ("medium", "Medio"),
+                            ("large", "Grande"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                ("feed_value", models.IntegerField()),
+                (
+                    "farmer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="animals",
+                        to="inteligente.agricultor",
+                    ),
+                ),
+                (
+                    "foods",
+                    models.ManyToManyField(
+                        related_name="animals", to="inteligente.alimento"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Alert',
+            name="Alert",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('alert_id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('type', models.CharField(choices=[('low_food', 'Nível Baixo de Ração'), ('maintenance', 'Manutenção Necessária'), ('error', 'Erro no Sistema'), ('offline', 'Equipamento Offline')], max_length=20)),
-                ('message', models.TextField(verbose_name='Mensagem')),
-                ('severity', models.CharField(choices=[('low', 'Baixo'), ('medium', 'Médio'), ('high', 'Alto')], default='medium', max_length=10)),
-                ('resolved', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(verbose_name='Criado em')),
-                ('resolved_at', models.DateTimeField(blank=True, null=True, verbose_name='Resolvido em')),
-                ('feeder', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='alerts', to='inteligente.feeder')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "alert_id",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("low_food", "Nível Baixo de Ração"),
+                            ("maintenance", "Manutenção Necessária"),
+                            ("error", "Erro no Sistema"),
+                            ("offline", "Equipamento Offline"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                ("message", models.TextField(verbose_name="Mensagem")),
+                (
+                    "severity",
+                    models.CharField(
+                        choices=[
+                            ("low", "Baixo"),
+                            ("medium", "Médio"),
+                            ("high", "Alto"),
+                        ],
+                        default="medium",
+                        max_length=10,
+                    ),
+                ),
+                ("resolved", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(verbose_name="Criado em")),
+                (
+                    "resolved_at",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="Resolvido em"
+                    ),
+                ),
+                (
+                    "feeder",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="alerts",
+                        to="inteligente.feeder",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='FeedingLog',
+            name="FeedingLog",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount_dispensed', models.IntegerField(verbose_name='Quantidade Dispensada (kg)')),
-                ('timestamp', models.DateTimeField(default=django.utils.timezone.now, verbose_name='Data/Hora')),
-                ('success', models.BooleanField(default=True, verbose_name='Sucesso')),
-                ('error_message', models.TextField(blank=True, null=True, verbose_name='Mensagem de Erro')),
-                ('feeder', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='feeding_logs', to='inteligente.feeder')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "amount_dispensed",
+                    models.IntegerField(verbose_name="Quantidade Dispensada (kg)"),
+                ),
+                (
+                    "timestamp",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="Data/Hora"
+                    ),
+                ),
+                ("success", models.BooleanField(default=True, verbose_name="Sucesso")),
+                (
+                    "error_message",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="Mensagem de Erro"
+                    ),
+                ),
+                (
+                    "feeder",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="feeding_logs",
+                        to="inteligente.feeder",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Log de Alimentação',
-                'verbose_name_plural': 'Logs de Alimentação',
-                'ordering': ['-timestamp'],
+                "verbose_name": "Log de Alimentação",
+                "verbose_name_plural": "Logs de Alimentação",
+                "ordering": ["-timestamp"],
             },
         ),
         migrations.CreateModel(
-            name='MaintenanceLog',
+            name="MaintenanceLog",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.TextField(verbose_name='Descrição')),
-                ('date_performed', models.DateTimeField(default=django.utils.timezone.now, verbose_name='Data da Manutenção')),
-                ('cost', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True, verbose_name='Custo')),
-                ('feeder', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='maintenance_logs', to='inteligente.feeder')),
-                ('performed_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("description", models.TextField(verbose_name="Descrição")),
+                (
+                    "date_performed",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now,
+                        verbose_name="Data da Manutenção",
+                    ),
+                ),
+                (
+                    "cost",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=10,
+                        null=True,
+                        verbose_name="Custo",
+                    ),
+                ),
+                (
+                    "feeder",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="maintenance_logs",
+                        to="inteligente.feeder",
+                    ),
+                ),
+                (
+                    "performed_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Log de Manutenção',
-                'verbose_name_plural': 'Logs de Manutenção',
-                'ordering': ['-date_performed'],
+                "verbose_name": "Log de Manutenção",
+                "verbose_name_plural": "Logs de Manutenção",
+                "ordering": ["-date_performed"],
             },
         ),
         migrations.CreateModel(
-            name='Relatorio',
+            name="Relatorio",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('monthly_consumption', models.DecimalField(decimal_places=2, help_text='Feed consumption in the month (kg)', max_digits=8)),
-                ('efficiency', models.DecimalField(decimal_places=2, help_text='Efficiency in %', max_digits=5)),
-                ('maintenances', models.TextField(blank=True, help_text='Description of maintenances')),
-                ('total_consumption', models.DecimalField(decimal_places=2, help_text='Total feed consumption (kg)', max_digits=8)),
-                ('machine_status', models.CharField(help_text='Current status of the feeder', max_length=40)),
-                ('report_date', models.DateField(auto_now_add=True)),
-                ('feeder', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reports', to='inteligente.alimentador')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "monthly_consumption",
+                    models.DecimalField(
+                        decimal_places=2,
+                        help_text="Feed consumption in the month (kg)",
+                        max_digits=8,
+                    ),
+                ),
+                (
+                    "efficiency",
+                    models.DecimalField(
+                        decimal_places=2, help_text="Efficiency in %", max_digits=5
+                    ),
+                ),
+                (
+                    "maintenances",
+                    models.TextField(
+                        blank=True, help_text="Description of maintenances"
+                    ),
+                ),
+                (
+                    "total_consumption",
+                    models.DecimalField(
+                        decimal_places=2,
+                        help_text="Total feed consumption (kg)",
+                        max_digits=8,
+                    ),
+                ),
+                (
+                    "machine_status",
+                    models.CharField(
+                        help_text="Current status of the feeder", max_length=40
+                    ),
+                ),
+                ("report_date", models.DateField(auto_now_add=True)),
+                (
+                    "feeder",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="reports",
+                        to="inteligente.alimentador",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='UserProfile',
+            name="UserProfile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role', models.CharField(choices=[('admin', 'Administrador'), ('farmer', 'Agricultor')], default='farmer', max_length=20)),
-                ('phone', models.CharField(blank=True, max_length=20, null=True)),
-                ('address', models.TextField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "role",
+                    models.CharField(
+                        choices=[("admin", "Administrador"), ("farmer", "Agricultor")],
+                        default="farmer",
+                        max_length=20,
+                    ),
+                ),
+                ("phone", models.CharField(blank=True, max_length=20, null=True)),
+                ("address", models.TextField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="profile",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='agricultor',
-            name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='perfil_agricultor', to='inteligente.usuario'),
+            model_name="agricultor",
+            name="user",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="perfil_agricultor",
+                to="inteligente.usuario",
+            ),
         ),
     ]
