@@ -108,7 +108,7 @@
                 style="display: flex; justify-content: space-between; align-items: center;">
                     <div class="feeder-info" style="display: flex; flex-direction: column;">
                         <h4 style="margin: 0;">{{ feeder.name }}</h4>
-                        <p style="margin: 0;">Estado: {% if feeder.status == 'active' %}Ativo{% else %}Inativo{% endif %}</p>
+                        <p style="margin: 0;">Proprietário: {{ feeder.owner }}</p>
                     </div>
                     <div class="feeder-level">
                         <div class="level-badge level-{% if feeder.food_level > 50 %}high{% elif feeder.food_level > 20 %}medium{% else %}low{% endif %}">
