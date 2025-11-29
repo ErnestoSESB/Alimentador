@@ -108,6 +108,13 @@ Para rodar o projeto, instale:
 
 ------------------------------------------------------------------------
 
+## 🖼 Imagens do Sistema 
+
+Dashboard:
+<img width="1976" height="926" alt="SmartFeeder-Dashboard" src="https://github.com/user-attachments/assets/32569ea2-3228-4ce5-833f-edd5c876cf1d" />
+
+
+
 ## 👥 Autores
 
 -   **Silvio Ernesto da Silva Bisneto**
