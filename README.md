@@ -110,9 +110,23 @@ Para rodar o projeto, instale:
 
 ## 🖼 Imagens do Sistema 
 
+## !!⚠ ATENÇÃO ⚠!!
+As imagens contidas abaixo não representam dados reais de usuarios, são apenas dados simulados através de algoritmos e inserções manuais de dados inexistentes. As imagens também não representam a totalidade das abas do projeto e não dispensam a necessidade da instalação do ambiente virtual para ver a totalidade do projeto.
+
 Dashboard:
 <img width="1976" height="926" alt="SmartFeeder-Dashboard" src="https://github.com/user-attachments/assets/32569ea2-3228-4ce5-833f-edd5c876cf1d" />
 
+Alimentadores:
+<img width="1920" height="925" alt="SmartFeeder-Alimentadores" src="https://github.com/user-attachments/assets/989245b8-e70c-4f03-960f-749eda24839b" />
+
+Usuarios:
+<img width="1919" height="930" alt="SmartFeeder-Usuarios" src="https://github.com/user-attachments/assets/01b38879-b6a2-4968-a381-36c88bf95f68" />
+
+Alertas:
+<img width="1919" height="924" alt="SmartFeeder-Alerts" src="https://github.com/user-attachments/assets/df71f351-ac79-47b2-8a31-1fccbd7146a8" />
+
+Relatórios:
+<img width="1917" height="927" alt="SmartFeeder-Relatorios" src="https://github.com/user-attachments/assets/674b81e9-fea9-4494-9dcc-b24069d1ddd3" />
 
 
 ## 👥 Autores
