@@ -111,7 +111,7 @@ Para rodar o projeto, instale:
 ## 🖼 Imagens do Sistema 
 
 ## !!⚠ ATENÇÃO ⚠!!
-As imagens contidas abaixo não representam dados reais de usuarios, são apenas dados simulados através de algoritmos e inserções manuais de dados inexistentes. As imagens também não representam a totalidade das abas do projeto e não dispensam a necessidade da instalação do ambiente virtual para ver a totalidade do projeto.
+As imagens contidas abaixo representam a visão do administrador, as imagens não representam dados reais de usuarios, são apenas dados simulados através de algoritmos e inserções manuais quaisquer dados apresentado pelo meio visual disponibilizado são inexistentes das aplicações reais do projeto. As imagens também não representam a totalidade das abas do projeto e não dispensam a necessidade da instalação do ambiente virtual para ver a totalidade do sistema.
 
 Dashboard:
 <img width="1976" height="926" alt="SmartFeeder-Dashboard" src="https://github.com/user-attachments/assets/32569ea2-3228-4ce5-833f-edd5c876cf1d" />
