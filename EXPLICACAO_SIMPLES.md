@@ -70,6 +70,7 @@ Implementamos um sistema que **simula e monitora o consumo mensal de ração** e
 python manage.py simulate_consumption
 ```
 
+
 **Resultado esperado:** Mensagem como "Records created: 91, updated: 0"
 
 ---

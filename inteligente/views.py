@@ -142,7 +142,7 @@ def feeders_list(request):
             Q(name__icontains=search)
             | Q(location__icontains=search)
             | Q(owner__icontains=search)
-        )
+        )    
 
     status = request.GET.get("status")
     if status:
