@@ -3,3 +3,6 @@ asgiref == 3.9.1
 pylance == 0.35.0
 pyarrow == 22.0.0
 simpy == 4.0.1
+gunicorn == 23.0.0
+psycopg2-binary==2.9.11
+django-ninja
