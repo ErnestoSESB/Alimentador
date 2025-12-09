@@ -8,7 +8,7 @@ from django.contrib.auth.models import Group
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.utils import timezone
-from .models import Feeder, Alert, User, UserProfile, MonthlyConsumption
+from .models import Feeder, Alert, User, UserProfile, MonthlyConsumption, ActivityLog, MaintenanceLog, FeedingLog
 from .forms import (
     feederForm,
     FarmerFeederForm,
@@ -21,6 +21,7 @@ from .forms import (
     UserProfileForm,
     FarmerProfileForm,
 )
+from .log_utils import log_activity, log_feeder_action, log_user_action
 import re
 
 
@@ -60,6 +61,7 @@ def login_view(request):
         user = users.first()
         if user.check_password(password):
             login(request, user)
+            log_user_action(user, 'login', f'Login realizado com sucesso', request)
             return redirect("dashboard")
         else:
             messages.error(request, "Senha incorreta.")
@@ -70,6 +72,8 @@ def login_view(request):
 
 def logout_view(request):
     """Logout view"""
+    user = request.user
+    log_user_action(user, 'logout', f'Logout realizado', request)
     logout(request)
     return redirect("login")
 
@@ -210,6 +214,13 @@ def feeder_add(request):
                     hours=8
                 )  # Próxima alimentação em 8 horas
             feeder.save()
+            log_feeder_action(
+                request.user, 
+                feeder, 
+                'create', 
+                f'Alimentador "{feeder.name}" criado em {feeder.location}',
+                request
+            )
             messages.success(
                 request, f'Alimentador "{feeder.name}" adicionado com sucesso!'
             )
@@ -271,6 +282,13 @@ def feeder_edit(request, feeder_id):
                 feeder_obj.next_maintenance = original_feeder.next_maintenance
 
             feeder_obj.save()
+            log_feeder_action(
+                request.user,
+                feeder_obj,
+                'update',
+                f'Alimentador "{feeder_obj.name}" atualizado',
+                request
+            )
             messages.success(
                 request, f'Alimentador "{feeder_obj.name}" atualizado com sucesso!'
             )
@@ -395,6 +413,13 @@ def user_add(request):
                 profile.created_by_admin = True
                 profile.save()
 
+                log_user_action(
+                    request.user,
+                    'create',
+                    f'Usuário "{user.get_full_name()}" criado com perfil {role}',
+                    request
+                )
+
                 messages.success(
                     request, f'Usuário "{user.get_full_name()}" adicionado com sucesso!'
                 )
@@ -426,6 +451,13 @@ def user_delete(request, user_id):
 
     user = get_object_or_404(User, id=user_id)
     if request.method == "POST":
+        user_name = user.get_full_name()
+        log_user_action(
+            request.user,
+            'delete',
+            f'Usuário "{user_name}" excluído do sistema',
+            request
+        )
         user.delete()
         messages.success(request, "Usuário excluído com sucesso!")
         return redirect("users")
@@ -669,6 +701,13 @@ def alert_add(request):
                     return redirect("alerts")
 
             alert.save()
+            log_feeder_action(
+                request.user,
+                alert.feeder,
+                'alert',
+                f'Alerta criado: {alert.get_type_display()} - {alert.message[:50]}',
+                request
+            )
             messages.success(
                 request, f"Alerta adicionado com sucesso para {alert.feeder.name}!"
             )
@@ -839,6 +878,36 @@ def reports_index(request):
     else:
         context_message = None
 
+    # Get activity logs based on user role
+    if user_profile and user_profile.role == "farmer":
+        # Farmers see only logs related to their feeders
+        activity_logs = ActivityLog.objects.filter(
+            Q(feeder__owner=user_full_name) | Q(user=request.user)
+        ).select_related('user', 'feeder').order_by('-timestamp')[:20]
+        
+        maintenance_logs = MaintenanceLog.objects.filter(
+            feeder__owner=user_full_name
+        ).select_related('feeder', 'performed_by').order_by('-date_performed')[:10]
+        
+        feeding_logs = FeedingLog.objects.filter(
+            feeder__owner=user_full_name
+        ).select_related('feeder').order_by('-timestamp')[:10]
+        # feeding_logs já inclui os campos sender_phone, received_message, feeder_level
+    else:
+        # Admins see all logs
+        activity_logs = ActivityLog.objects.all().select_related(
+            'user', 'feeder'
+        ).order_by('-timestamp')[:20]
+        
+        maintenance_logs = MaintenanceLog.objects.all().select_related(
+            'feeder', 'performed_by'
+        ).order_by('-date_performed')[:10]
+        
+        feeding_logs = FeedingLog.objects.all().select_related(
+            'feeder'
+        ).order_by('-timestamp')[:10]
+        # feeding_logs já inclui os campos sender_phone, received_message, feeder_level
+
     context = {
         "report_data": report_data,
         "top_feeders": top_feeders,
@@ -850,6 +919,9 @@ def reports_index(request):
         "custom_executive_summary": (
             user_profile.custom_executive_summary if user_profile else None
         ),
+        "activity_logs": activity_logs,
+        "maintenance_logs": maintenance_logs,
+        "feeding_logs": feeding_logs,
     }
 
     return render(request, "reports/index.html", context)

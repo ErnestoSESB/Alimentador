@@ -21,6 +21,11 @@ from inteligente.views import farmer_template, index
 from inteligente import views
 from django.conf import settings
 from django.conf.urls.static import static
+from ninja import NinjaAPI
+from inteligente.api import router as feeding_router
+
+api = NinjaAPI()
+api.add_router("/logs", feeding_router)
 
 urlpatterns = [
     # path('farmer/', farmer_template),
@@ -60,6 +65,7 @@ urlpatterns = [
         "alerts/<int:alert_id>/edit/", views.alert_edit, name="alert_edit"
     ),  # Relatorios
     path("reports/", views.reports_index, name="reports"),
+    path("api/", api.urls),
 ]
 
 # Serve static files during development

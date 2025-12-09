@@ -25,7 +25,12 @@ SECRET_KEY = "django-insecure-f#9bfc=))b*q!skw=s=58)%apq9ppgaf!c0e^@l+yov79$iq(o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'intercorporate-aniyah-scholarless.ngrok-free.dev',
+    '127.0.0.1', 
+    'localhost',
+    
+]
 
 
 # Application definition
@@ -43,6 +48,10 @@ INSTALLED_APPS = [
 ]
 
 LOGIN_URL = "/login/"
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://intercorporate-aniyah-scholarless.ngrok-free.dev'
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

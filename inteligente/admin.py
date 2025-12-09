@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import UserProfile, Feeder, Alert, MaintenanceLog, FeedingLog
+from .models import UserProfile, Feeder, Alert, MaintenanceLog, FeedingLog, ActivityLog
 
 
 # Inline admin for UserProfile
@@ -122,6 +122,16 @@ class FeedingLogAdmin(admin.ModelAdmin):
     search_fields = ("feeder__name", "error_message")
     readonly_fields = ("timestamp",)
     raw_id_fields = ("feeder",)
+
+
+@admin.register(ActivityLog)
+class ActivityLogAdmin(admin.ModelAdmin):
+    list_display = ("user", "action", "feeder", "timestamp", "ip_address")
+    list_filter = ("action", "timestamp", "user")
+    search_fields = ("user__username", "user__email", "feeder__name", "description", "ip_address")
+    readonly_fields = ("timestamp",)
+    raw_id_fields = ("user", "feeder")
+    date_hierarchy = "timestamp"
 
 
 # Customize admin site

@@ -272,9 +272,16 @@ class MaintenanceLog(models.Model):
 class FeedingLog(models.Model):
     """Feeding log model"""
 
+
     feeder = models.ForeignKey(
         Feeder, on_delete=models.CASCADE, related_name="feeding_logs"
     )
+    # Telefone do remetente do SMS
+    sender_phone = models.CharField(max_length=20, blank=True, null=True, verbose_name="Telefone do Remetente")
+    # Mensagem recebida via SMS/JSON
+    received_message = models.TextField(blank=True, null=True, verbose_name="Mensagem Recebida")
+    # Nível do alimentador informado no SMS/JSON
+    feeder_level = models.FloatField(blank=True, null=True, verbose_name="Nível do Alimentador (%)")
     amount_dispensed = models.IntegerField(verbose_name="Quantidade Dispensada (kg)")
     timestamp = models.DateTimeField(default=timezone.now, verbose_name="Data/Hora")
     success = models.BooleanField(default=True, verbose_name="Sucesso")
@@ -304,3 +311,34 @@ class MonthlyConsumption(models.Model):
 
     def __str__(self):
         return f"{self.feeder.name} - {self.month}/{self.year}: {self.kg_consumed}kg"
+
+
+class ActivityLog(models.Model):
+    """General activity log for system events"""
+    ACTION_CHOICES = [
+        ('create', 'Criação'),
+        ('update', 'Atualização'),
+        ('delete', 'Exclusão'),
+        ('login', 'Login'),
+        ('logout', 'Logout'),
+        ('feeding', 'Alimentação'),
+        ('maintenance', 'Manutenção'),
+        ('alert', 'Alerta'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Usuário")
+    feeder = models.ForeignKey(Feeder, on_delete=models.SET_NULL, null=True, blank=True, related_name='activity_logs', verbose_name="Alimentador")
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES, verbose_name="Ação")
+    description = models.TextField(verbose_name="Descrição")
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Data/Hora")
+    ip_address = models.GenericIPAddressField(null=True, blank=True, verbose_name="Endereço IP")
+    
+    class Meta:
+        verbose_name = "Log de Atividade"
+        verbose_name_plural = "Logs de Atividades"
+        ordering = ["-timestamp"]
+    
+    def __str__(self):
+        user_name = self.user.get_full_name() if self.user else "Sistema"
+        feeder_name = f" - {self.feeder.name}" if self.feeder else ""
+        return f"{user_name}: {self.get_action_display()}{feeder_name} - {self.timestamp.strftime('%d/%m/%Y %H:%M')}"
