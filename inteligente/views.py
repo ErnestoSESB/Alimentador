@@ -25,9 +25,7 @@ from .log_utils import log_activity, log_feeder_action, log_user_action
 import re
 
 
-# Helper function to check admin permissions
 def is_admin_user(user):
-    """Check if user has admin permissions"""
     if user.is_superuser:
         return True
     user_profile = getattr(user, "profile", None)
@@ -37,8 +35,6 @@ def is_admin_user(user):
 def landing_page(request):
     return render(request, "alimentador/alimentador.html")
 
-
-# Create your views here.
 def index(request):
     return render(request, "inteligente/index.html")
 
@@ -71,61 +67,10 @@ def login_view(request):
 
 
 def logout_view(request):
-    """Logout view"""
     user = request.user
     log_user_action(user, 'logout', f'Logout realizado', request)
     logout(request)
     return redirect("login")
-
-
-'''@login_required
-def dashboard(request):
-    """Dashboard view with statistics"""
-    # Get statistics
-    total_feeders = Feeder.objects.count()
-    active_feeders = Feeder.objects.filter(status='active')
-    pending_alerts = Alert.objects.filter(resolved=False)
-    
-    stats = {
-
-
-@login_required
-def alert_edit(request, alert_id):
-    alert = get_object_or_404(Alert, id=alert_id)
-    if request.method == 'POST':
-        alert.type = request.POST.get('type')
-        alert.message = request.POST.get('message')
-        alert.severity = request.POST.get('severity')
-        alert.resolved = bool(request.POST.get('resolved'))
-        alert.save()
-        messages.success(request, 'Alerta atualizado com sucesso!')
-        return redirect('alerts')
-    context = {
-        'alert': alert,
-    }
-    return render(request, 'alerts/edit.html', context)
-        'total_feeders': total_feeders,
-        'active_feeders': active_feeders.count(),
-        'inactive_feeders': total_feeders - active_feeders.count(),
-        'alerts_count': pending_alerts.count(),
-        'average_food_level': 40  # Calculate from actual data
-    }
-    
-    # Recent alerts (last 3)
-    recent_alerts = pending_alerts.order_by('-created_at')[:3]
-    
-    # Active feeders for status display
-    active_feeders_list = active_feeders[:4]
-    
-    context = {
-        'stats': stats,
-        'recent_alerts': recent_alerts,
-        'active_feeders': active_feeders_list,
-        'alerts_count': pending_alerts.count(),
-    }
-    
-    return render(request, 'dashboard/index.html', context)
-'''
 
 
 @login_required
