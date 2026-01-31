@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+python manage.py migrate
+
+python /app/manage.py collectstatic --noinput
+
+exec /usr/local/bin/gunicorn alimentador.wsgi --bind 0.0.0.0:5000 --chdir=/app

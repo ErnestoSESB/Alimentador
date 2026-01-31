@@ -2,33 +2,47 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:15
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: default
-      POSTGRES_PASSWORD: default
-      POSTGRES_DB: default
-    ports:
-      - "5432:5432"
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - pgdata:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   django:
-    build: .
-    container_name: django_app
-    command: python manage.py runserver 0.0.0.0:8000
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+    command: ./start
     volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    environment:
-      - POSTGRES_DB=default
-      - POSTGRES_USER=default
-      - POSTGRES_PASSWORD=default
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
+      - media_volume:/app/media
+      - static_volume:/app/staticfiles
+    env_file:
+      - .env
     depends_on:
       - postgres
     restart: always
 
+  nginx:
+    build:
+      context: .
+      dockerfile: ./compose/nginx/Dockerfile
+    volumes:
+      - media_volume:/app/media
+      - static_volume:/app/staticfiles
+    ports:
+      - 90:80
+    restart: unless-stopped  
+
 volumes:
-  pgdata:
+  postgres_data:
+  static_volume:
+  media_volume:
