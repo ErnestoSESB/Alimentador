@@ -6,3 +6,6 @@ simpy == 4.0.1
 gunicorn == 23.0.0
 psycopg2-binary==2.9.11
 django-ninja
+djangorestframework==3.16.1
+markdown==3.10.2
+django-filter==25.2

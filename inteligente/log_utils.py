@@ -1,6 +1,4 @@
-"""
-Utilitários para registrar logs de atividades do sistema
-"""
+
 from .models import ActivityLog
 
 
@@ -39,10 +37,8 @@ def log_activity(user, action, description, feeder=None, request=None):
 
 
 def log_feeder_action(user, feeder, action, description, request=None):
-    """Registra uma ação relacionada a um alimentador"""
     return log_activity(user, action, description, feeder=feeder, request=request)
 
 
 def log_user_action(user, action, description, request=None):
-    """Registra uma ação do usuário (login, logout, etc)"""
     return log_activity(user, action, description, request=request)
